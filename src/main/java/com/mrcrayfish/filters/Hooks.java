@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screen.inventory.CreativeScreen;
  */
 public class Hooks
 {
-    public static int getPotionEffectOffset(DisplayEffectsScreen screen)
+    public static int getPotionEffectOffset(@SuppressWarnings("rawtypes") DisplayEffectsScreen screen)
     {
         if(screen instanceof CreativeScreen)
         {
@@ -17,7 +17,7 @@ public class Hooks
         return 124;
     }
 
-    public static int getEffectsGuiOffset(DisplayEffectsScreen screen)
+    public static int getEffectsGuiOffset(@SuppressWarnings("rawtypes") DisplayEffectsScreen screen)
     {
         if(screen instanceof CreativeScreen)
         {

@@ -1,47 +1,52 @@
 package com.mrcrayfish.filters;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mrcrayfish.filters.gui.widget.button.IconButton;
 import com.mrcrayfish.filters.gui.widget.button.TagButton;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Author: MrCrayfish
+ * Author: MrCrayfish feat. justAm0dd3r
  */
 public class Events
 {
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    /*
+    - func_238654_b_(MatrixStack p_238654_1_, List<? extends ITextProperties> p_238654_2_, int p_238654_3_, int p_238654_4_)
+      equals renderToolTip()
+    - func_238652_a_(stack, ITextProperties properties, int, int) equals renderToolTip()
+     */
     private static final ResourceLocation ICONS = new ResourceLocation(Reference.MOD_ID, "textures/gui/icons.png");
-    private static Map<ItemGroup, Integer> scrollMap = new HashMap<>();
+    private static final Map<ItemGroup, Integer> scrollMap = new HashMap<>();
 
     private boolean updatedFilters;
-    private List<TagButton> buttons = new ArrayList<>();
-    private Map<ItemGroup, FilterEntry> miscFilterMap = new HashMap<>();
-    private Button btnScrollUp;
-    private Button btnScrollDown;
-    private Button btnEnableAll;
-    private Button btnDisableAll;
+    private final List<TagButton> buttons = new ArrayList<>();
+    private final Map<ItemGroup, FilterEntry> miscFilterMap = new HashMap<>();
+    private IconButton btnScrollUp, btnScrollDown, btnEnableAll, btnDisableAll;
     private boolean viewingFilterTab;
-    private int guiCenterX = 0;
-    private int guiCenterY = 0;
-    private ItemGroup currentGroup = ItemGroup.BUILDING_BLOCKS;
 
     @SubscribeEvent
     public void onPlayerLogout(ClientPlayerNetworkEvent.LoggedOutEvent event)
@@ -52,6 +57,8 @@ public class Events
     @SubscribeEvent
     public void onScreenInit(GuiScreenEvent.InitGuiEvent.Post event)
     {
+        LOGGER.debug("onScreenInit() called.");
+
         if(event.getGui() instanceof CreativeScreen)
         {
             if(!this.updatedFilters)
@@ -61,13 +68,21 @@ public class Events
             }
 
             this.viewingFilterTab = false;
-            this.guiCenterX = ((CreativeScreen) event.getGui()).getGuiLeft();
-            this.guiCenterY = ((CreativeScreen) event.getGui()).getGuiTop();
+            int guiCenterX = ((CreativeScreen) event.getGui()).getGuiLeft();
+            int guiCenterY = ((CreativeScreen) event.getGui()).getGuiTop();
 
-            event.addWidget(this.btnScrollUp = new IconButton(this.guiCenterX - 22, this.guiCenterY - 12, I18n.format("gui.button.filters.scroll_filters_up"), button -> this.scrollUp(), ICONS, 0, 0));
-            event.addWidget(this.btnScrollDown = new IconButton(this.guiCenterX - 22, this.guiCenterY + 127, I18n.format("gui.button.filters.scroll_filters_down"), button -> this.scrollDown(), ICONS, 16, 0));
-            event.addWidget(this.btnEnableAll = new IconButton(this.guiCenterX - 50, this.guiCenterY + 10, I18n.format("gui.button.filters.enable_filters"), button -> this.enableAllFilters(), ICONS, 32, 0));
-            event.addWidget(this.btnDisableAll = new IconButton(this.guiCenterX - 50, this.guiCenterY + 32, I18n.format("gui.button.filters.disable_filters"), button -> this.disableAllFilters(), ICONS, 48, 0));
+            event.addWidget(this.btnScrollUp = new IconButton(new TranslationTextComponent("gui.button.filters.scroll_filters_up"),
+                    guiCenterX - 22, guiCenterY - 12, 16, 16, 0, 0,   0, ICONS, button -> scrollUp()));
+
+            event.addWidget(this.btnScrollDown = new IconButton(new TranslationTextComponent("gui.button.filters.scroll_filters_down"),
+                    guiCenterX - 22, guiCenterY + 127, 16, 16, 16, 0, 0, ICONS, button -> scrollDown()));
+
+            event.addWidget(this.btnEnableAll = new IconButton(new TranslationTextComponent("gui.button.filters.enable_filters"),
+                    guiCenterX - 50, guiCenterY + 10, 16, 16, 32, 0,  0, ICONS, button -> enableAllFilters()));
+
+            event.addWidget(this.btnDisableAll = new IconButton(new TranslationTextComponent("gui.button.filters.disable_filters"),
+                    guiCenterX - 50, guiCenterY + 32, 16, 16, 48, 0,  0, ICONS, button -> disableAllFilters()));
+
 
             this.hideButtons();
 
@@ -81,41 +96,52 @@ public class Events
                 this.viewingFilterTab = true;
                 this.updateItems(screen);
             }
-
-            this.currentGroup = group;
         }
+    }
+
+    private void printHi() {
+        LOGGER.info("Hi");
     }
 
     @SubscribeEvent
     public void onScreenClick(GuiScreenEvent.MouseClickedEvent.Pre event)
     {
+        LOGGER.debug("onScreenClick() called.");
+
         if(event.getButton() != GLFW.GLFW_MOUSE_BUTTON_LEFT)
             return;
 
         if(event.getGui() instanceof CreativeScreen)
         {
-            for(Button button : this.buttons)
+            for(TagButton button : this.buttons)
             {
-                if(button.isMouseOver(event.getMouseX(), event.getMouseY()))
+
+                if(button.func_231047_b_(event.getMouseX(), event.getMouseY()))
                 {
-                    if(button.mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton()))
+                    LOGGER.debug("button.isMouseOver(mouseX, mouseY) returned true.");
+                    if(button.func_231048_c_(event.getMouseX(), event.getMouseY(), event.getButton()))
                     {
+                        LOGGER.debug("button.mouseClicked(mouseX, mouseY) returned true.");
+                        FilterEntry entry = button.getFilter();
+                        entry.setEnabled(!entry.isEnabled());
+                        button.updateState();
+                        updateItems(((CreativeScreen) event.getGui()));
                         return;
                     }
                 }
+
             }
         }
     }
 
+    @SuppressWarnings("unused") // Gets called by javascript
     public void onCreativeTabChange(CreativeScreen screen, ItemGroup group)
     {
+        LOGGER.debug("onCreativeTabChange() called.");
+
         if(Filters.get().hasFilters(group))
         {
-            if(group != this.currentGroup)
-            {
-                this.updateItems(screen);
-                this.currentGroup = group;
-            }
+            this.updateItems(screen);
         }
         this.updateTagButtons(screen);
     }
@@ -155,9 +181,8 @@ public class Events
             {
                 /* Render buttons */
                 this.buttons.forEach(button ->
-                {
-                    button.render(event.getMouseX(), event.getMouseY(), Minecraft.getInstance().getRenderPartialTicks());
-                });
+                        button.renderButton(event.getMouseX(), event.getMouseY(),
+                                Minecraft.getInstance().getRenderPartialTicks()));
             }
         }
     }
@@ -173,30 +198,42 @@ public class Events
             if(Filters.get().hasFilters(group))
             {
                 /* Render tooltips after so it renders above buttons */
+
                 this.buttons.forEach(button ->
                 {
-                    if(button.isMouseOver(event.getMouseX(), event.getMouseY()))
+                    //if(button.isMouseOver(event.getMouseX(), event.getMouseY()))
+                    if(button.func_231047_b_(event.getMouseX(), event.getMouseY()))
                     {
-                        screen.renderTooltip(button.getFilter().getName(), event.getMouseX(), event.getMouseY());
+                        // screen.renderTooltip(button.getFilter().getName(), event.getMouseX(), event.getMouseY())
+                        screenRenderToolTip(screen, /*button.getMatrixStack(), */button.getFilter().getName(), event.getMouseX(), event.getMouseY());
                     }
                 });
 
-                if(this.btnEnableAll.isMouseOver(event.getMouseX(), event.getMouseY()))
+                if(this.btnEnableAll.func_231047_b_(event.getMouseX(), event.getMouseY()))
                 {
-                    screen.renderTooltip(this.btnEnableAll.getMessage(), event.getMouseX(), event.getMouseY());
+                    screenRenderToolTip(screen, this.btnEnableAll.getMessage(), event.getMouseX(), event.getMouseY());
                 }
 
-                if(this.btnDisableAll.isMouseOver(event.getMouseX(), event.getMouseY()))
+                if(this.btnDisableAll.func_231047_b_(event.getMouseX(), event.getMouseY()))
                 {
-                    screen.renderTooltip(this.btnDisableAll.getMessage(), event.getMouseX(), event.getMouseY());
+                    screenRenderToolTip(screen, this.btnDisableAll.getMessage(), event.getMouseX(), event.getMouseY());
                 }
+
+
             }
         }
+    }
+
+    private void screenRenderToolTip(CreativeScreen screen, String name, int mouseX, int mouseY) {
+        // screen.func_238652_a_(stack, ITextProperties.func_240652_a_(name), mouseX, mouseY);
+        screen.func_238652_a_(new MatrixStack(), ITextProperties.func_240652_a_(name), mouseX, mouseY);
     }
 
     @SubscribeEvent
     public void onMouseScroll(GuiScreenEvent.MouseScrollEvent.Pre event)
     {
+        LOGGER.debug("onMouseScroll() called.");
+
         if(event.getGui() instanceof CreativeScreen)
         {
             CreativeScreen creativeScreen = (CreativeScreen) event.getGui();
@@ -204,6 +241,7 @@ public class Events
             int guiTop = creativeScreen.getGuiTop();
             int startX = guiLeft - 32;
             int startY = guiTop + 10;
+            //noinspection UnnecessaryLocalVariable
             int endX = guiLeft;
             int endY = startY + 28 * 4 + 3;
             if(event.getMouseX() >= startX && event.getMouseX() < endX && event.getMouseY() >= startY && event.getMouseY() < endY)
@@ -237,9 +275,12 @@ public class Events
                 TagButton button = new TagButton(screen.getGuiLeft() - 28, screen.getGuiTop() + 29 * (i - scroll) + 10, entries.get(i), button1 -> this.updateItems(screen));
                 this.buttons.add(button);
             }
-            this.btnScrollUp.active = scroll > 0;
-            this.btnScrollDown.active = scroll <= entries.size() - 4 - 1;
+
+            this.btnScrollUp  .setEnabled(scroll > 0);
+            this.btnScrollDown.setEnabled(scroll <= entries.size() - 4 - 1);
             this.showButtons();
+
+
         }
         else
         {
@@ -249,6 +290,8 @@ public class Events
 
     private void updateItems(CreativeScreen screen)
     {
+        LOGGER.debug("updateItems() called.");
+
         CreativeScreen.CreativeContainer container = screen.getContainer();
         Set<Item> filteredItems = new LinkedHashSet<>();
         ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
@@ -277,6 +320,8 @@ public class Events
 
     private void updateFilters()
     {
+        LOGGER.debug("updateFilters() called.");
+
         Filters.get().getGroups().forEach(group ->
         {
             List<FilterEntry> entries = Filters.get().getFilters(group);
@@ -339,20 +384,24 @@ public class Events
 
     private void showButtons()
     {
-        this.btnScrollUp.visible = true;
-        this.btnScrollDown.visible = true;
-        this.btnEnableAll.visible = true;
-        this.btnDisableAll.visible = true;
-        this.buttons.forEach(button -> button.visible = true);
+        LOGGER.debug("showButtons() called.");
+
+        this.btnScrollUp.setActive(true);
+        this.btnScrollDown.setActive(true);
+        this.btnEnableAll.setActive(true);
+        this.btnDisableAll.setActive(true);
+        this.buttons.forEach(button -> button.setActive(true));
     }
 
     private void hideButtons()
     {
-        this.btnScrollUp.visible = false;
-        this.btnScrollDown.visible = false;
-        this.btnEnableAll.visible = false;
-        this.btnDisableAll.visible = false;
-        this.buttons.forEach(button -> button.visible = false);
+        LOGGER.debug("hideButtons() called.");
+
+        this.btnScrollUp.setActive(false);
+        this.btnScrollDown.setActive(false);
+        this.btnEnableAll.setActive(false);
+        this.btnDisableAll.setActive(false);
+        this.buttons.forEach(button -> button.setActive(false));
     }
 
     private void scrollUp()
@@ -362,15 +411,11 @@ public class Events
         {
             CreativeScreen creativeScreen = (CreativeScreen) screen;
             ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
-            List<FilterEntry> entries = this.getFilters(group);
-            if(entries != null)
+            int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
+            if(scroll > 0)
             {
-                int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
-                if(scroll > 0)
-                {
-                    scrollMap.put(group, scroll - 1);
-                    this.updateTagButtons(creativeScreen);
-                }
+                scrollMap.put(group, scroll - 1);
+                this.updateTagButtons(creativeScreen);
             }
         }
     }
@@ -383,49 +428,53 @@ public class Events
             CreativeScreen creativeScreen = (CreativeScreen) screen;
             ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
             List<FilterEntry> entries = this.getFilters(group);
-            if(entries != null)
+            //if(entries != null)
+            //{
+            int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
+            if(scroll <= entries.size() - 4 - 1)
             {
-                int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
-                if(scroll <= entries.size() - 4 - 1)
-                {
-                    scrollMap.put(group, scroll + 1);
-                    this.updateTagButtons(creativeScreen);
-                }
+                scrollMap.put(group, scroll + 1);
+                this.updateTagButtons(creativeScreen);
             }
+            //}
         }
     }
 
     private void enableAllFilters()
     {
+        LOGGER.debug("enableAllFilters() called.");
+
         Screen screen = Minecraft.getInstance().currentScreen;
         if(screen instanceof CreativeScreen)
         {
             CreativeScreen creativeScreen = (CreativeScreen) screen;
             ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
             List<FilterEntry> entries = this.getFilters(group);
-            if(entries != null)
-            {
-                entries.forEach(entry -> entry.setEnabled(true));
-                this.buttons.forEach(TagButton::updateState);
-                this.updateItems(creativeScreen);
-            }
+            //if(entries != null)
+            //{
+            entries.forEach(entry -> entry.setEnabled(true));
+            this.buttons.forEach(TagButton::updateState);
+            this.updateItems(creativeScreen);
+            //}
         }
     }
 
     private void disableAllFilters()
     {
+        LOGGER.debug("disableAllFilters() called.");
+
         Screen screen = Minecraft.getInstance().currentScreen;
         if(screen instanceof CreativeScreen)
         {
             CreativeScreen creativeScreen = (CreativeScreen) screen;
             ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
             List<FilterEntry> entries = this.getFilters(group);
-            if(entries != null)
-            {
-                entries.forEach(filters -> filters.setEnabled(false));
-                this.buttons.forEach(TagButton::updateState);
-                this.updateItems(creativeScreen);
-            }
+            //if(entries != null)
+            //{
+            entries.forEach(filters -> filters.setEnabled(false));
+            this.buttons.forEach(TagButton::updateState);
+            this.updateItems(creativeScreen);
+            //}
         }
     }
 }

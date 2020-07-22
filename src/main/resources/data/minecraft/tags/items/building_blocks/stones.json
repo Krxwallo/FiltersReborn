@@ -14,12 +14,14 @@
         "minecraft:chiseled_sandstone",
         "minecraft:cut_sandstone",
         "minecraft:smooth_quartz",
+        "minecraft:quartz_bricks",
         "minecraft:smooth_red_sandstone",
         "minecraft:smooth_sandstone",
         "minecraft:smooth_stone",
         "minecraft:bricks",
         "minecraft:mossy_cobblestone",
         "minecraft:obsidian",
+        "minecraft:crying_obsidian",
         "minecraft:purpur_block",
         "minecraft:purpur_pillar",
         "minecraft:stone_bricks",
@@ -39,6 +41,12 @@
         "minecraft:sea_lantern",
         "minecraft:red_sandstone",
         "minecraft:chiseled_red_sandstone",
-        "minecraft:cut_red_sandstone"
+        "minecraft:cut_red_sandstone",
+        "minecraft:blackstone",
+        "minecraft:gilded_blackstone",
+        "minecraft:polished_blackstone",
+        "minecraft:polished_blackstone_bricks",
+        "minecraft:cracked_polished_blackstone_bricks",
+        "minecraft:chiseled_polished_blackstone"
     ]
 }

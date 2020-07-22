@@ -7,6 +7,8 @@
         "minecraft:zombie_head",
         "minecraft:creeper_head",
         "minecraft:dragon_head",
-        "minecraft:end_crystal"
+        "minecraft:end_crystal",
+        "minecraft:respawn_anchor",
+        "minecraft:lodestone"
     ]
 }

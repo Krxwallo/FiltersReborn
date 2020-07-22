@@ -43,6 +43,8 @@
         "minecraft:nether_star",
         "minecraft:fire_charge",
         "minecraft:bowl",
-        "minecraft:conduit"
+        "minecraft:conduit",
+        "minecraft:netherite_ingot",
+        "minecraft:netherite_scrap"
     ]
 }

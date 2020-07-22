@@ -5,6 +5,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -16,11 +18,13 @@ import java.util.Objects;
  */
 public class FilterEntry
 {
-    private ResourceLocation tag;
-    private String translationKey;
-    private ItemStack icon;
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    private final ResourceLocation tag;
+    private final String translationKey;
+    private final ItemStack icon;
     private boolean enabled = true;
-    private List<Item> items = new ArrayList<>();
+    private final List<Item> items = new ArrayList<>();
 
     public FilterEntry(ResourceLocation tag, ItemStack icon)
     {
@@ -46,6 +50,7 @@ public class FilterEntry
 
     public void setEnabled(boolean enabled)
     {
+        LOGGER.debug("Setting Enabled to: " + enabled);
         this.enabled = enabled;
     }
 

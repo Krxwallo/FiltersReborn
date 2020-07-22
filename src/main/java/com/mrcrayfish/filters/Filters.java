@@ -12,21 +12,21 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Author: MrCrayfish
+ * Author: MrCrayfish feat. justAm0dd3r
  */
 @Mod(Reference.MOD_ID)
 public class Filters
 {
     private static Filters instance;
 
-    private Map<ItemGroup, Set<FilterEntry>> filterMap = new HashMap<>();
+    private final Map<ItemGroup, Set<FilterEntry>> filterMap = new HashMap<>();
     public Events events;
 
     public Filters()
@@ -53,16 +53,23 @@ public class Filters
         this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/glass"), new ItemStack(Blocks.GLASS_PANE));
         this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/colored"), new ItemStack(Blocks.GREEN_GLAZED_TERRACOTTA));
         this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/special"), new ItemStack(Blocks.DRAGON_HEAD));
+        this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/infested"), new ItemStack(Blocks.INFESTED_CRACKED_STONE_BRICKS));
+        this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/lights"), new ItemStack(Blocks.TORCH));
+        this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/bees"), new ItemStack(Blocks.BEE_NEST));
         this.register(ItemGroup.REDSTONE, new ResourceLocation("redstone/core"), new ItemStack(Items.REDSTONE));
         this.register(ItemGroup.REDSTONE, new ResourceLocation("redstone/components"), new ItemStack(Items.STICKY_PISTON));
         this.register(ItemGroup.REDSTONE, new ResourceLocation("redstone/inputs"), new ItemStack(Items.TRIPWIRE_HOOK));
         this.register(ItemGroup.REDSTONE, new ResourceLocation("redstone/doors"), new ItemStack(Items.OAK_DOOR));
-        this.register(ItemGroup.TRANSPORTATION, new ResourceLocation("transportation/vehicles"), new ItemStack(Items.MINECART));
+        this.register(ItemGroup.TRANSPORTATION, new ResourceLocation("transportation/minecarts"), new ItemStack(Items.MINECART));
+        this.register(ItemGroup.TRANSPORTATION, new ResourceLocation("transportation/boats"), new ItemStack(Items.OAK_BOAT));
+        this.register(ItemGroup.TRANSPORTATION, new ResourceLocation("transportation/rails"), new ItemStack(Items.RAIL));
         this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/materials"), new ItemStack(Items.GOLD_INGOT));
         this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/eggs"), new ItemStack(Items.TURTLE_EGG));
         this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/plants_and_seeds"), new ItemStack(Items.SUGAR_CANE));
         this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/dyes"), new ItemStack(Items.RED_DYE));
         this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/discs"), new ItemStack(Items.MUSIC_DISC_MALL));
+        this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/buckets"), new ItemStack(Items.BUCKET));
+        this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/banner_patterns"), new ItemStack(Items.CREEPER_BANNER_PATTERN));
         this.register(ItemGroup.FOOD, new ResourceLocation("foodstuffs/raw"), new ItemStack(Items.BEEF));
         this.register(ItemGroup.FOOD, new ResourceLocation("foodstuffs/cooked"), new ItemStack(Items.COOKED_PORKCHOP));
         this.register(ItemGroup.FOOD, new ResourceLocation("foodstuffs/special"), new ItemStack(Items.GOLDEN_APPLE));
@@ -83,7 +90,7 @@ public class Filters
         return instance;
     }
 
-    public void register(ItemGroup group, @Nullable ResourceLocation tag, ItemStack icon)
+    public void register(ItemGroup group, @Nonnull ResourceLocation tag, ItemStack icon)
     {
         Set<FilterEntry> entries = this.filterMap.computeIfAbsent(group, itemGroup -> new LinkedHashSet<>());
         entries.add(new FilterEntry(tag, icon));

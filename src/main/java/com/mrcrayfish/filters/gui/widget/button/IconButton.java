@@ -1,53 +1,62 @@
 package com.mrcrayfish.filters.gui.widget.button;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nonnull;
 
 /**
- * Author: MrCrayfish
+ * Author: MrCrayfish & justAm0dd3r
  */
 @OnlyIn(Dist.CLIENT)
-public class IconButton extends Button
+public class IconButton extends ImageButton
 {
-    private ResourceLocation iconResource;
-    private int iconU;
-    private int iconV;
 
-    public IconButton(int x, int y, String message, IPressable pressable, ResourceLocation iconResource, int iconU, int iconV)
-    {
-        super(x, y, 20, 20, message, pressable);
-        this.iconResource = iconResource;
-        this.iconU = iconU;
-        this.iconV = iconV;
+    private final ITextComponent message;
+    private boolean enabled = true;
+
+    public IconButton(ITextComponent message, int xIn, int yIn, int widthIn, int heightIn, int xTexStartIn, int yTexStartIn, int yDiffTextIn, ResourceLocation resourceLocationIn, IPressable onPressIn) {
+        super(xIn, yIn, widthIn, heightIn, xTexStartIn, yTexStartIn, yDiffTextIn, resourceLocationIn, onPressIn);
+        this.message = message;
     }
 
-    public void setIcon(ResourceLocation iconResource, int iconU, int iconV)
-    {
-        this.iconResource = iconResource;
-        this.iconU = iconU;
-        this.iconV = iconV;
+    public void setActive(boolean active) {
+        this.field_230694_p_ = active;
     }
+
+    public String getMessage() {
+        return message.getString();
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    /*
+    Widget:
+        - func_230996_d_(boolean p_230996_1_) equals setFocused(boolean focused)
+        - func_230999_j_() equals getFocused()
+        - func_230458_i_() equals getMessage()
+        - field_230689_k_ equals height
+        - field_230688_j_ (probably) equals width
+        - func_230431_b_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) equals "renderButton()"
+        - func_238472_a_(MatrixStack p_238472_1_, FontRenderer p_238472_2_, ITextProperties p_238472_3_, int p_238472_4_, int p_238472_5_, int p_238472_6_)
+          equals blit(x + 2, y + 2, iconU, iconV, (prob.) width, (prob.) height)
+        - func_230989_a_(focused) equals getYImage(focused)
+        - field_230694_p_ equals active (prob.)
+     */
 
     @Override
-    public void renderButton(int mouseX, int mouseY, float partialTicks)
-    {
-        Minecraft.getInstance().getTextureManager().bindTexture(WIDGETS_LOCATION);
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        int offset = this.getYImage(this.isHovered());
-        this.blit(this.x, this.y, 0, 46 + offset * 20, this.width / 2, this.height);
-        this.blit(this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + offset * 20, this.width / 2, this.height);
-        if(!this.active)
-        {
-            GlStateManager.color4f(0.5F, 0.5F, 0.5F, 1.0F);
-        }
-        Minecraft.getInstance().getTextureManager().bindTexture(this.iconResource);
-        this.blit(this.x + 2, this.y + 2, this.iconU, this.iconV, 16, 16);
+    public void func_230431_b_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        // Render the button, if enabled is true!
+        if (enabled) super.func_230431_b_(matrixStack, mouseX, mouseY, partialTicks);
     }
 }

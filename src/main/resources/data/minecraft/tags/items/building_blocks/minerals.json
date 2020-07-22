@@ -1,7 +1,6 @@
 {
     "replace": false,
     "values": [
-        "minecraft:gold_ore",
         "minecraft:iron_ore",
         "minecraft:coal_ore",
         "minecraft:lapis_ore",
@@ -14,6 +13,9 @@
         "minecraft:iron_block",
         "minecraft:lapis_block",
         "minecraft:diamond_block",
-        "minecraft:emerald_block"
+        "minecraft:emerald_block",
+        "minecraft:netherite_block",
+        "minecraft:ancient_debris",
+        "#minecraft:gold_ores"
     ]
 }

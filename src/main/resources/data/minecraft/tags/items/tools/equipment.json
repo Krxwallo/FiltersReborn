@@ -5,6 +5,7 @@
         "minecraft:compass",
         "minecraft:fishing_rod",
         "minecraft:clock",
-        "minecraft:shears"
+        "minecraft:shears",
+        "minecraft:lead"
     ]
 }

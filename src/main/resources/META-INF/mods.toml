@@ -24,6 +24,6 @@ A mod that improves the Creative GUI by introducing filters based on tags
 [[dependencies.filters]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.14.4]"
+    versionRange="[1.16.1]"
     ordering="NONE"
     side="BOTH"
