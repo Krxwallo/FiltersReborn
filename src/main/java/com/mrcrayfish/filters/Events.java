@@ -57,8 +57,6 @@ public class Events
     @SubscribeEvent
     public void onScreenInit(GuiScreenEvent.InitGuiEvent.Post event)
     {
-        LOGGER.debug("onScreenInit() called.");
-
         if(event.getGui() instanceof CreativeScreen)
         {
             if(!this.updatedFilters)
@@ -106,8 +104,6 @@ public class Events
     @SubscribeEvent
     public void onScreenClick(GuiScreenEvent.MouseClickedEvent.Pre event)
     {
-        LOGGER.debug("onScreenClick() called.");
-
         if(event.getButton() != GLFW.GLFW_MOUSE_BUTTON_LEFT)
             return;
 
@@ -118,10 +114,8 @@ public class Events
 
                 if(button.func_231047_b_(event.getMouseX(), event.getMouseY()))
                 {
-                    LOGGER.debug("button.isMouseOver(mouseX, mouseY) returned true.");
-                    if(button.func_231048_c_(event.getMouseX(), event.getMouseY(), event.getButton()))
+                   if(button.func_231048_c_(event.getMouseX(), event.getMouseY(), event.getButton()))
                     {
-                        LOGGER.debug("button.mouseClicked(mouseX, mouseY) returned true.");
                         FilterEntry entry = button.getFilter();
                         entry.setEnabled(!entry.isEnabled());
                         button.updateState();
@@ -137,8 +131,6 @@ public class Events
     @SuppressWarnings("unused") // Gets called by javascript
     public void onCreativeTabChange(CreativeScreen screen, ItemGroup group)
     {
-        LOGGER.debug("onCreativeTabChange() called.");
-
         if(Filters.get().hasFilters(group))
         {
             this.updateItems(screen);

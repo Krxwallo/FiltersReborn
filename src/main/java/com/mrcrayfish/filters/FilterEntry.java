@@ -50,7 +50,6 @@ public class FilterEntry
 
     public void setEnabled(boolean enabled)
     {
-        LOGGER.debug("Setting Enabled to: " + enabled);
         this.enabled = enabled;
     }
 
