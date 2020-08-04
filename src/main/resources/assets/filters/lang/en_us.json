@@ -48,5 +48,7 @@
     "gui.tag_filter.minecraft.brewing.potions": "Potions",
     "gui.tag_filter.minecraft.brewing.ingredients": "Ingredients",
     "gui.tag_filter.minecraft.brewing.equipment": "Equipment",
-    "gui.tag_filter.forge.glass": "Glass"
+    "gui.tag_filter.forge.glass": "Glass",
+
+    "gui.filters.message.main": "%s Version %s"
 }

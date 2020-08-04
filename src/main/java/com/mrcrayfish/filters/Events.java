@@ -7,13 +7,13 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
-import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.GuiContainerEvent;
@@ -22,13 +22,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jline.utils.Colors;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Author: MrCrayfish feat. justAm0dd3r
+ * Author: MrCrayfish & justAm0dd3r
  */
 public class Events
 {
@@ -47,6 +48,7 @@ public class Events
     private final Map<ItemGroup, FilterEntry> miscFilterMap = new HashMap<>();
     private IconButton btnScrollUp, btnScrollDown, btnEnableAll, btnDisableAll;
     private boolean viewingFilterTab;
+    private boolean noFilters;
 
     @SubscribeEvent
     public void onPlayerLogout(ClientPlayerNetworkEvent.LoggedOutEvent event)
@@ -80,8 +82,6 @@ public class Events
 
             event.addWidget(this.btnDisableAll = new IconButton(new TranslationTextComponent("gui.button.filters.disable_filters"),
                     guiCenterX - 50, guiCenterY + 32, 16, 16, 48, 0,  0, ICONS, button -> disableAllFilters()));
-
-
             this.hideButtons();
 
             CreativeScreen screen = (CreativeScreen) event.getGui();
@@ -95,10 +95,6 @@ public class Events
                 this.updateItems(screen);
             }
         }
-    }
-
-    private void printHi() {
-        LOGGER.info("Hi");
     }
 
     @SubscribeEvent
@@ -133,7 +129,11 @@ public class Events
     {
         if(Filters.get().hasFilters(group))
         {
+            noFilters = false;
             this.updateItems(screen);
+        }
+        else {
+            noFilters = true;
         }
         this.updateTagButtons(screen);
     }
@@ -175,6 +175,11 @@ public class Events
                 this.buttons.forEach(button ->
                         button.renderButton(event.getMouseX(), event.getMouseY(),
                                 Minecraft.getInstance().getRenderPartialTicks()));
+            }
+
+            if(!noFilters) {
+                //noinspection ConstantConditions // Colorcode is not null
+                Minecraft.getInstance().fontRenderer.func_238407_a_(event.getMatrixStack(), new TranslationTextComponent("gui.filters.message.main", Reference.NAME, Reference.VERSION), 3, 3, TextFormatting.WHITE.getColor());
             }
         }
     }
@@ -224,8 +229,6 @@ public class Events
     @SubscribeEvent
     public void onMouseScroll(GuiScreenEvent.MouseScrollEvent.Pre event)
     {
-        LOGGER.debug("onMouseScroll() called.");
-
         if(event.getGui() instanceof CreativeScreen)
         {
             CreativeScreen creativeScreen = (CreativeScreen) event.getGui();
