@@ -1,21 +1,23 @@
 modLoader="javafml"
 loaderVersion="[28,)"
-issueTrackerURL="https://github.com/MrCrayfish/Filters/issues"
+issueTrackerURL="https://github.com/Krxwallo/FiltersReborn/issues"
 
 [[mods]]
 modId="filters"
 version="1.1.2"
 displayName="Filters"
 updateJSONURL="https://raw.githubusercontent.com/MrCrayfish/ModUpdates/master/filters/update.json"
-displayURL="https://mrcrayfish.com"
-logoFile="filters.png"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/filters-reborn"
+logoFile="filters_reborn_icon.png"
 credits=""
-authors="MrCrayfish"
+authors="MrCrayfish & justAm0dd3r"
 description='''
-A mod that improves the Creative GUI by introducing filters based on tags
+A continuation of the filters mod originally by MrCrayfish.
+This mod adds nice item filters to the creative tab so that you can find your items/groups of items(e.g. spawn eggs or
+ colored glass) much easier.
 '''
 
-[[dependencies.filters]] #optional
+[[dependencies.filters]]
     modId="forge"
     mandatory=true
     versionRange="[28,)"

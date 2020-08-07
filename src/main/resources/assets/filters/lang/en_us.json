@@ -3,6 +3,7 @@
     "gui.button.filters.scroll_filters_down": "Scroll Filters Down",
     "gui.button.filters.enable_filters": "Enable All Filters",
     "gui.button.filters.disable_filters": "Disable All Filters",
+    "gui.button.filters.open_website": "Open Filters Reborn Website",
     "gui.tag_filter.minecraft.miscellaneous": "Miscellaneous",
     "gui.tag_filter.minecraft.building_blocks.natural": "Natural",
     "gui.tag_filter.minecraft.building_blocks.stones": "Stones",

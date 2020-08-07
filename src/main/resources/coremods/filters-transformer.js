@@ -27,9 +27,9 @@ function initializeCoreMod() {
                 log("Patching DisplayEffectsScreen...");
 
                 patch({
-                    obfName: "func_147044_g",
+                    obfName: "func_238811_b_",
                     name: "drawActivePotionEffects",
-                    desc: "()V",
+                    desc: "(Lcom/mojang/blaze3d/matrix/MatrixStack;)V",
                     patch: patch_DisplayEffectsScreen_drawActivePotionEffects
                 }, classNode);
 

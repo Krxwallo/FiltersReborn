@@ -22,7 +22,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jline.utils.Colors;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -82,6 +81,7 @@ public class Events
 
             event.addWidget(this.btnDisableAll = new IconButton(new TranslationTextComponent("gui.button.filters.disable_filters"),
                     guiCenterX - 50, guiCenterY + 32, 16, 16, 48, 0,  0, ICONS, button -> disableAllFilters()));
+
             this.hideButtons();
 
             CreativeScreen screen = (CreativeScreen) event.getGui();
@@ -178,7 +178,7 @@ public class Events
             }
 
             if(!noFilters) {
-                //noinspection ConstantConditions // Colorcode is not null
+                //noinspection ConstantConditions // Color code is not null!
                 Minecraft.getInstance().fontRenderer.func_238407_a_(event.getMatrixStack(), new TranslationTextComponent("gui.filters.message.main", Reference.NAME, Reference.VERSION), 3, 3, TextFormatting.WHITE.getColor());
             }
         }
