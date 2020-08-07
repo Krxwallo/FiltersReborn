@@ -15,7 +15,7 @@ apply plugin: 'maven-publish'
 
 version = '1.0.1-1.16.1'
 group = 'com.mrcrayfish.filters' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'filters'
+archivesBaseName = 'filters_reborn'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
