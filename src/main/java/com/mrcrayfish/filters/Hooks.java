@@ -12,15 +12,21 @@ import org.apache.logging.log4j.Logger;
 public class Hooks
 {
     private static final Logger LOGGER = LogManager.getLogger();
+    private static int animation = 48;
 
     public static int getPotionEffectOffset(@SuppressWarnings("rawtypes") DisplayEffectsScreen screen)
     {
         LOGGER.debug("getPotionEffectOffset() called.");
         if(screen instanceof CreativeScreen && !Filters.get().events.noFilters)
         {
+            animation = 48;
             return 172;
         }
-        return 124;
+        if (animation == 0) return 124;
+        else {
+            animation -= 3;
+            return 124 + animation;
+        }
     }
 
     public static int getEffectsGuiOffset(@SuppressWarnings("rawtypes") DisplayEffectsScreen screen)
