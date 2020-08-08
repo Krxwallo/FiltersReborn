@@ -22,10 +22,13 @@ public class IconButton extends ImageButton
 
     private final ITextComponent message;
     private boolean enabled = true;
+    public final int x,y;
 
     public IconButton(ITextComponent message, int xIn, int yIn, int widthIn, int heightIn, int xTexStartIn, int yTexStartIn, int yDiffTextIn, ResourceLocation resourceLocationIn, IPressable onPressIn) {
         super(xIn, yIn, widthIn, heightIn, xTexStartIn, yTexStartIn, yDiffTextIn, resourceLocationIn, onPressIn);
         this.message = message;
+        this.x = xIn;
+        this.y = yIn;
     }
 
     public void setActive(boolean active) {

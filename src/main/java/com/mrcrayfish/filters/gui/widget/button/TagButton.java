@@ -27,7 +27,8 @@ public class TagButton extends Button
     private final FilterEntry category;
     private final ItemStack stack;
     private boolean toggled;
-    private final int x, y;
+    public final int x;
+    public final int y;
 
     public TagButton(int x, int y, FilterEntry filter, IPressable pressable)
     {
