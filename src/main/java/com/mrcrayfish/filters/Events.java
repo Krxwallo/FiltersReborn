@@ -189,7 +189,7 @@ public class Events
                 int x = 3;
                 if (ModList.get().isLoaded("jei")) {
                     if (bookMarkOverlayEnabled) {
-                        x = 120;
+                        x = 140;
                     }
                 }
                 GL11.glPushMatrix();
