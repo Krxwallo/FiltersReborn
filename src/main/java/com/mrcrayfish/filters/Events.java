@@ -3,10 +3,16 @@ package com.mrcrayfish.filters;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mrcrayfish.filters.gui.widget.button.IconButton;
 import com.mrcrayfish.filters.gui.widget.button.TagButton;
+import mezz.jei.Internal;
+import mezz.jei.events.BookmarkOverlayToggleEvent;
+import mezz.jei.runtime.JeiHelpers;
+import mezz.jei.startup.JeiStarter;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -19,10 +25,12 @@ import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,6 +56,7 @@ public class Events
     private IconButton btnScrollUp, btnScrollDown, btnEnableAll, btnDisableAll;
     private boolean viewingFilterTab;
     public boolean noFilters;
+    private boolean bookMarkOverlayEnabled = true; // Jei Bookmark Overlay
 
     @SubscribeEvent
     public void onPlayerLogout(ClientPlayerNetworkEvent.LoggedOutEvent event)
@@ -167,6 +176,7 @@ public class Events
         if(event.getGuiContainer() instanceof CreativeScreen)
         {
             CreativeScreen screen = (CreativeScreen) event.getGuiContainer();
+
             ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
 
             if(Filters.get().hasFilters(group))
@@ -176,8 +186,17 @@ public class Events
             }
 
             if(!noFilters) {
+                int x = 3;
+                if (ModList.get().isLoaded("jei")) {
+                    if (bookMarkOverlayEnabled) {
+                        x = 120;
+                    }
+                }
+                GL11.glPushMatrix();
+                GL11.glScalef(1, 1, 1);
                 //noinspection ConstantConditions // Color code is not null!
-                Minecraft.getInstance().fontRenderer.func_238407_a_(event.getMatrixStack(), new TranslationTextComponent("gui.filters.message.main", Reference.NAME, Reference.VERSION), 3, 3, TextFormatting.WHITE.getColor());
+                Minecraft.getInstance().fontRenderer.func_238407_a_(event.getMatrixStack(), new TranslationTextComponent("gui.filters.message.main", Reference.NAME, Reference.VERSION), x, 3, TextFormatting.WHITE.getColor());
+                GL11.glPopMatrix();
             }
         }
     }
@@ -469,5 +488,11 @@ public class Events
             this.updateItems(creativeScreen);
             //}
         }
+    }
+
+    @SubscribeEvent
+    public void onBookMarkOverlayToggle(BookmarkOverlayToggleEvent event) {
+        LOGGER.debug("onBookMarkOverlayToggle() called.");
+        bookMarkOverlayEnabled = event.isBookmarkOverlayEnabled();
     }
 }
