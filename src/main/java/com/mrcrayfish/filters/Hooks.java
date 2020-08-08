@@ -11,12 +11,10 @@ import org.apache.logging.log4j.Logger;
 @SuppressWarnings("unused") // Coremod hooks.
 public class Hooks
 {
-    private static final Logger LOGGER = LogManager.getLogger();
     private static int animation = 48;
 
     public static int getPotionEffectOffset(@SuppressWarnings("rawtypes") DisplayEffectsScreen screen)
     {
-        LOGGER.debug("getPotionEffectOffset() called.");
         if(screen instanceof CreativeScreen && !Filters.get().events.noFilters)
         {
             animation = 48;
@@ -31,7 +29,6 @@ public class Hooks
 
     public static int getEffectsGuiOffset(@SuppressWarnings("rawtypes") DisplayEffectsScreen screen)
     {
-        LOGGER.debug("getEffectsGuiOffset() called.");
         if(screen instanceof CreativeScreen)
         {
             return 182;
