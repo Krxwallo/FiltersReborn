@@ -1,3 +1,9 @@
+Build 2020-08-08 14:05 filters_reborn-1.16.1-1.0.2
+==================================================
+- Fixed bookmarked items from jei conflicting with
+  filters and filters reborn text.
+
+
 Build 2020-08-07 filters_reborn-1.0.1-1.16.1
 ============================================
-- Fixed Potion Effects overlapping buttons.
+- Fixed Potion Effects overlapping filters.
