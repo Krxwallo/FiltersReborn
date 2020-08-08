@@ -57,11 +57,11 @@ public class TagButton extends Button
     public void func_230431_b_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         // equals "renderButton()"
         // this.matrixStack = matrixStack;
-        renderButton(mouseX, mouseY, partialTicks);
+        renderButton();
         super.func_230431_b_(matrixStack, mouseX, mouseY, partialTicks);
     }
 
-    public void renderButton(int mouseX, int mouseY, float partialTicks)
+    public void renderButton()
     {
         Minecraft mc = Minecraft.getInstance();
         mc.getTextureManager().bindTexture(TABS);

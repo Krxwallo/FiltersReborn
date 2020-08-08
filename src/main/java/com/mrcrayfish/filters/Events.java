@@ -47,7 +47,7 @@ public class Events
     private final Map<ItemGroup, FilterEntry> miscFilterMap = new HashMap<>();
     private IconButton btnScrollUp, btnScrollDown, btnEnableAll, btnDisableAll;
     private boolean viewingFilterTab;
-    private boolean noFilters;
+    public boolean noFilters;
 
     @SubscribeEvent
     public void onPlayerLogout(ClientPlayerNetworkEvent.LoggedOutEvent event)
@@ -172,9 +172,7 @@ public class Events
             if(Filters.get().hasFilters(group))
             {
                 /* Render buttons */
-                this.buttons.forEach(button ->
-                        button.renderButton(event.getMouseX(), event.getMouseY(),
-                                Minecraft.getInstance().getRenderPartialTicks()));
+                this.buttons.forEach(TagButton::renderButton);
             }
 
             if(!noFilters) {

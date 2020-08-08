@@ -16,7 +16,7 @@ public class Hooks
     public static int getPotionEffectOffset(@SuppressWarnings("rawtypes") DisplayEffectsScreen screen)
     {
         LOGGER.debug("getPotionEffectOffset() called.");
-        if(screen instanceof CreativeScreen)
+        if(screen instanceof CreativeScreen && !Filters.get().events.noFilters)
         {
             return 172;
         }
