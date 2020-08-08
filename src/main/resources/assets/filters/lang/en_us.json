@@ -51,5 +51,5 @@
     "gui.tag_filter.minecraft.brewing.equipment": "Equipment",
     "gui.tag_filter.forge.glass": "Glass",
 
-    "gui.filters.message.main": "%s Version %s"
+    "gui.filters.message.main": "%s v%s"
 }
