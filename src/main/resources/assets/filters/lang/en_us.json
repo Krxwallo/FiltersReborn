@@ -26,6 +26,8 @@
     "gui.tag_filter.minecraft.redstone.components": "Components",
     "gui.tag_filter.minecraft.redstone.inputs": "Inputs",
     "gui.tag_filter.minecraft.redstone.doors": "Doors",
+    "gui.tag_filter.minecraft.redstone.trapdoors": "Trapdoors",
+    "gui.tag_filter.minecraft.redstone.fence_gates": "Fence Gates",
     "gui.tag_filter.minecraft.transportation.minecarts": "Minecarts",
     "gui.tag_filter.minecraft.transportation.boats": "Boats",
     "gui.tag_filter.minecraft.transportation.rails": "Rails",
