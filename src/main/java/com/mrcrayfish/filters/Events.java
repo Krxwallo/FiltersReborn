@@ -3,9 +3,12 @@ package com.mrcrayfish.filters;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mrcrayfish.filters.gui.widget.button.IconButton;
 import com.mrcrayfish.filters.gui.widget.button.TagButton;
+import com.mrcrayfish.filters.web.LinkManager;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import mezz.jei.events.BookmarkOverlayToggleEvent;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.ConfirmOpenLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
 import net.minecraft.item.Item;
@@ -13,6 +16,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -104,11 +108,13 @@ public class Events
     @SubscribeEvent
     public void onScreenClick(GuiScreenEvent.MouseClickedEvent.Pre event)
     {
-        if(event.getButton() != GLFW.GLFW_MOUSE_BUTTON_LEFT)
-            return;
+        if(event.getButton() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return;
 
         if(event.getGui() instanceof CreativeScreen)
         {
+            if (!noFilters && isMouseOverText(((int) event.getMouseX()), ((int) event.getMouseY())))
+                LinkManager.openCurseforgeLink();
+
             for(TagButton button : this.buttons)
             {
 
@@ -228,9 +234,25 @@ public class Events
                     screenRenderToolTip(screen, this.btnDisableAll.getMessage(), event.getMouseX(), event.getMouseY());
                 }
 
+                if (isMouseOverText(event.getMouseX(), event.getMouseY())) { screenRenderToolTip(((CreativeScreen) event.getGui()),
+                        new TranslationTextComponent("gui.filters.message.main.tooltip").getString(), event.getMouseX(), event.getMouseY());
 
+                }
             }
         }
+    }
+
+    private boolean isMouseOverText(int mouseX, int mouseY) {
+        int textStartX = 1;
+        int textStartY = 1;
+        if (bookMarkOverlayEnabled) textStartX = 140;
+        int textLengthX = 110;
+        int textLengthY = 10;
+
+        int textEndX = textStartX + textLengthX;
+        int textEndY = textStartY + textLengthY;
+
+        return mouseX > textStartX && mouseX < textEndX && mouseY > textStartY && mouseY < textEndY;
     }
 
     private void screenRenderToolTip(CreativeScreen screen, String name, int mouseX, int mouseY) {

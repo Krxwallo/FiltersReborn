@@ -11,6 +11,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import java.util.Set;
 @Mod(Reference.MOD_ID)
 public class Filters
 {
+    private static final Logger LOGGER = LogManager.getLogger();
     private static Filters instance;
 
     private final Map<ItemGroup, Set<FilterEntry>> filterMap = new HashMap<>();
@@ -31,6 +34,7 @@ public class Filters
 
     public Filters()
     {
+        LOGGER.info(Reference.NAME + " Version " + Reference.VERSION + " by " + Reference.AUTHOR + " started up.");
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         MinecraftForge.EVENT_BUS.register(this.events = new Events());
         Filters.instance = this;

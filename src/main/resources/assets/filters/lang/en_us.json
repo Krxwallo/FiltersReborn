@@ -36,6 +36,7 @@
     "gui.tag_filter.minecraft.miscellaneous.dyes": "Dyes",
     "gui.tag_filter.minecraft.miscellaneous.banner_patterns": "Banner Patterns",
     "gui.tag_filter.minecraft.miscellaneous.buckets": "Buckets",
+    "gui.tag_filter.minecraft.miscellaneous.horse_armor": "Horse Armor",
     "gui.tag_filter.minecraft.foodstuffs.raw": "Raw",
     "gui.tag_filter.minecraft.foodstuffs.cooked": "Cooked",
     "gui.tag_filter.minecraft.foodstuffs.special": "Speical",
@@ -51,5 +52,6 @@
     "gui.tag_filter.minecraft.brewing.equipment": "Equipment",
     "gui.tag_filter.forge.glass": "Glass",
 
-    "gui.filters.message.main": "%s v%s"
+    "gui.filters.message.main": "%s v%s",
+    "gui.filters.message.main.tooltip": "Open Curseforge Link"
 }
