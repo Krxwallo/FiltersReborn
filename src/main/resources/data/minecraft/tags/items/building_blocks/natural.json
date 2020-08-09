@@ -74,6 +74,10 @@
         "minecraft:red_terracotta",
         "minecraft:black_terracotta",
         "minecraft:terracotta",
-        "minecraft:nether_wart_block"
+        "minecraft:nether_wart_block",
+        "minecraft:crimson_nylium",
+        "minecraft:warped_nylium",
+        "minecraft:soul_soil",
+        "minecraft:warped_wart_block"
     ]
 }

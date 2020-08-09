@@ -47,6 +47,10 @@
         "minecraft:polished_blackstone",
         "minecraft:polished_blackstone_bricks",
         "minecraft:cracked_polished_blackstone_bricks",
-        "minecraft:chiseled_polished_blackstone"
+        "minecraft:chiseled_polished_blackstone",
+        "minecraft:cracked_nether_bricks",
+        "minecraft:chiseled_nether_bricks",
+        "minecraft:basalt",
+        "minecraft:polished_basalt"
     ]
 }
