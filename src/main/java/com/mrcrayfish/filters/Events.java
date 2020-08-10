@@ -3,12 +3,11 @@ package com.mrcrayfish.filters;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mrcrayfish.filters.gui.widget.button.IconButton;
 import com.mrcrayfish.filters.gui.widget.button.TagButton;
+import com.mrcrayfish.filters.helper.ItemGroups;
 import com.mrcrayfish.filters.web.LinkManager;
-import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import mezz.jei.events.BookmarkOverlayToggleEvent;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ConfirmOpenLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
 import net.minecraft.item.Item;
@@ -16,7 +15,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -53,7 +51,6 @@ public class Events
     private final List<TagButton> buttons = new ArrayList<>();
     private final Map<ItemGroup, FilterEntry> miscFilterMap = new HashMap<>();
     private IconButton btnScrollUp, btnScrollDown, btnEnableAll, btnDisableAll;
-    private boolean viewingFilterTab;
     public boolean noFilters;
     private boolean bookMarkOverlayEnabled = true; // Jei Bookmark Overlay
 
@@ -74,7 +71,6 @@ public class Events
                 this.updatedFilters = true;
             }
 
-            this.viewingFilterTab = false;
             int guiCenterX = ((CreativeScreen) event.getGui()).getGuiLeft();
             int guiCenterY = ((CreativeScreen) event.getGui()).getGuiTop();
 
@@ -95,11 +91,9 @@ public class Events
             CreativeScreen screen = (CreativeScreen) event.getGui();
             this.updateTagButtons(screen);
 
-            ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
-            if(Filters.get().hasFilters(group))
+            if(ItemGroups.getHasFilters(event))
             {
                 this.showButtons();
-                this.viewingFilterTab = true;
                 this.updateItems(screen);
             }
         }
@@ -134,10 +128,10 @@ public class Events
         }
     }
 
-    @SuppressWarnings("unused") // Gets called by javascript
+    @SuppressWarnings("unused") // Gets called by coremod
     public void onCreativeTabChange(CreativeScreen screen, ItemGroup group)
     {
-        if(Filters.get().hasFilters(group))
+        if(ItemGroups.getHasFilters(group))
         {
             noFilters = false;
             this.updateItems(screen);
@@ -148,29 +142,28 @@ public class Events
         this.updateTagButtons(screen);
     }
 
+    /**
+     * Update the screen items when the gui doesn't have filters.
+     * @param event the subscribe event
+     */
     @SubscribeEvent
     public void onScreenDrawPre(GuiScreenEvent.DrawScreenEvent.Pre event)
     {
         if(event.getGui() instanceof CreativeScreen)
         {
-            CreativeScreen screen = (CreativeScreen) event.getGui();
-            ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
-
-            if(Filters.get().hasFilters(group))
+            if(!ItemGroups.getHasFilters(event))
             {
-                if(!this.viewingFilterTab)
-                {
-                    this.updateItems(screen);
-                    this.viewingFilterTab = true;
-                }
-            }
-            else
-            {
-                this.viewingFilterTab = false;
+                CreativeScreen screen = (CreativeScreen) event.getGui();
+                this.updateItems(screen);
             }
         }
     }
 
+    /**
+     * Used for rendering the buttons (calling the TagButton::renderButton method on each one) and for rendering the
+     * "Filters Reborn vX.X.X" text. All this is only done for creative tabs with filters available.
+     * @param event the corresponding subscribe event from forge
+     */
     @SubscribeEvent
     public void onScreenDrawBackground(GuiContainerEvent.DrawBackground event)
     {
@@ -178,37 +171,46 @@ public class Events
         {
             CreativeScreen screen = (CreativeScreen) event.getGuiContainer();
 
-            ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
+            ItemGroup group = ItemGroups.getGroup(screen.getSelectedTabIndex());
 
             if(Filters.get().hasFilters(group))
             {
-                /* Render buttons */
-                this.buttons.forEach(TagButton::renderButton);
-            }
+                // Filters are available for this creative tab. Now we can render the buttons and the text.
 
-            if(!noFilters) {
+                // Render Buttons
+                this.buttons.forEach(TagButton::renderButton);
+
+                // Get the right text x -> check if the jei bookmark overlay is enabled
                 int x = 3;
                 if (ModList.get().isLoaded("jei")) {
                     if (bookMarkOverlayEnabled) {
+                        // Overlay is enabled. "Move" the text to the right to avoid overlapping
                         x = 140;
                     }
                 }
+
                 GL11.glPushMatrix();
+                // Change the text size
                 GL11.glScalef(1, 1, 1);
-                //noinspection ConstantConditions // Color code is not null!
+                // Render the text
+                //noinspection ConstantConditions // TextFormatting.WHITE.getColor() will never cause NullPointerException
                 Minecraft.getInstance().fontRenderer.func_238407_a_(event.getMatrixStack(), new TranslationTextComponent("gui.filters.message.main", Reference.NAME, Reference.VERSION), x, 3, TextFormatting.WHITE.getColor());
                 GL11.glPopMatrix();
             }
         }
     }
 
+    /**
+     * Used for rendering the tooltips when the mouse is over a button.
+     * @param event The subscribe event from forge. contains the screen.
+     */
     @SubscribeEvent
     public void onScreenDrawPost(GuiScreenEvent.DrawScreenEvent.Post event)
     {
         if(event.getGui() instanceof CreativeScreen)
         {
             CreativeScreen screen = (CreativeScreen) event.getGui();
-            ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
+            ItemGroup group = ItemGroups.getGroup(screen.getSelectedTabIndex());
 
             if(Filters.get().hasFilters(group))
             {
@@ -216,27 +218,30 @@ public class Events
 
                 this.buttons.forEach(button ->
                 {
-                    //if(button.isMouseOver(event.getMouseX(), event.getMouseY()))
+                    // Is the mouse over the button?
                     if(button.func_231047_b_(event.getMouseX(), event.getMouseY()))
                     {
-                        // screen.renderTooltip(button.getFilter().getName(), event.getMouseX(), event.getMouseY())
-                        screenRenderToolTip(screen, /*button.getMatrixStack(), */button.getFilter().getName(), event.getMouseX(), event.getMouseY());
+                        // Render the tooltip
+                        screenRenderToolTip(screen, button.getFilter().getName(), event.getMouseX(), event.getMouseY());
                     }
                 });
 
                 if(this.btnEnableAll.func_231047_b_(event.getMouseX(), event.getMouseY()))
                 {
+                    // Render the "Enable all filters" tooltip
                     screenRenderToolTip(screen, this.btnEnableAll.getMessage(), event.getMouseX(), event.getMouseY());
                 }
 
                 if(this.btnDisableAll.func_231047_b_(event.getMouseX(), event.getMouseY()))
                 {
+                    // Render the "Disable all filters" tooltip
                     screenRenderToolTip(screen, this.btnDisableAll.getMessage(), event.getMouseX(), event.getMouseY());
                 }
 
-                if (isMouseOverText(event.getMouseX(), event.getMouseY())) { screenRenderToolTip(((CreativeScreen) event.getGui()),
+                if (isMouseOverText(event.getMouseX(), event.getMouseY())) {
+                    // Render the "Open Curseforge Website" tooltip
+                    screenRenderToolTip(((CreativeScreen) event.getGui()),
                         new TranslationTextComponent("gui.filters.message.main.tooltip").getString(), event.getMouseX(), event.getMouseY());
-
                 }
             }
         }
@@ -294,7 +299,7 @@ public class Events
             return;
 
         this.buttons.clear();
-        ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
+        ItemGroup group = ItemGroups.getGroup(screen.getSelectedTabIndex());
         if(Filters.get().hasFilters(group))
         {
             List<FilterEntry> entries = this.getFilters(group);
@@ -323,7 +328,7 @@ public class Events
 
         CreativeScreen.CreativeContainer container = screen.getContainer();
         Set<Item> filteredItems = new LinkedHashSet<>();
-        ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
+        ItemGroup group = ItemGroups.getGroup(screen.getSelectedTabIndex());
         if(group != null)
         {
             if(Filters.get().hasFilters(group))
@@ -390,13 +395,6 @@ public class Events
         });
     }
 
-    private ItemGroup getGroup(int index)
-    {
-        if(index < 0 || index >= ItemGroup.GROUPS.length)
-            return null;
-        return ItemGroup.GROUPS[index];
-    }
-
     private List<FilterEntry> getFilters(ItemGroup group)
     {
         if(Filters.get().hasFilters(group))
@@ -439,7 +437,7 @@ public class Events
         if(screen instanceof CreativeScreen)
         {
             CreativeScreen creativeScreen = (CreativeScreen) screen;
-            ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
+            ItemGroup group = ItemGroups.getGroup(creativeScreen.getSelectedTabIndex());
             int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
             if(scroll > 0)
             {
@@ -455,7 +453,7 @@ public class Events
         if(screen instanceof CreativeScreen)
         {
             CreativeScreen creativeScreen = (CreativeScreen) screen;
-            ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
+            ItemGroup group = ItemGroups.getGroup(creativeScreen.getSelectedTabIndex());
             List<FilterEntry> entries = this.getFilters(group);
             //if(entries != null)
             //{
@@ -477,7 +475,7 @@ public class Events
         if(screen instanceof CreativeScreen)
         {
             CreativeScreen creativeScreen = (CreativeScreen) screen;
-            ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
+            ItemGroup group = ItemGroups.getGroup(creativeScreen.getSelectedTabIndex());
             List<FilterEntry> entries = this.getFilters(group);
             //if(entries != null)
             //{
@@ -496,7 +494,7 @@ public class Events
         if(screen instanceof CreativeScreen)
         {
             CreativeScreen creativeScreen = (CreativeScreen) screen;
-            ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
+            ItemGroup group = ItemGroups.getGroup(creativeScreen.getSelectedTabIndex());
             List<FilterEntry> entries = this.getFilters(group);
             //if(entries != null)
             //{
