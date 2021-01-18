@@ -41,7 +41,8 @@ repositories {
 }
 dependencies {
      // ... OTHER DEPENDENCIES ... 
-    compile fg.deobf("curse.maven:fr-397288:FILE_ID")
+     
+     compile fg.deobf("curse.maven:fr-397288:FILE_ID")
 }
 ```
 Replace ```FILE_ID``` with the file id targeted towards your minecraft version. For a full list see the [official curseforge page](https://www.curseforge.com/minecraft/mc-mods/filters-reborn).
