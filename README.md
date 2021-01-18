@@ -33,14 +33,15 @@ If you are a developer and want to add Filters support to your own mod, you can 
 ```gradle
 repositories {
      maven {
-          name = "justAm0dd3r Maven"
-          url = "lookonthebrightsi.de/files/maven/"
+          name = "Cursemaven"
+          url = "https://www.cursemaven.com"
      }
-     [....OTHER REPOSITORIES SUCH AS JEI...]
+     
+     // ... OTHER REPOSITORIES SUCH AS JEI ...
 }
 dependencies {
-     [..... OTHER DEPENDENCIES ...]
-    compile fg.deobf("justAm0dd3r.filters-reborn:filters_reborn-1.16.1:[FILTERS_REBORN_VERSION]")
+     // ... OTHER DEPENDENCIES ... 
+    compile fg.deobf("curse.maven:fr-397288:FILE_ID")
 }
 ```
-Replace ```[FILTERS_REBORN_VERSION]``` with the current/your desired version.
+Replace ```FILE_ID``` with the current/your desired version.
