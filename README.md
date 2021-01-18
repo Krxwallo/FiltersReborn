@@ -28,7 +28,7 @@ Filters introduces filters into the Creative GUI based on tags introduced in Min
 
 ### Developers:
 
-If you are a developer and want to add Filters support to your own mod, you can simply do so by adding this to your build.gradle file.
+If you are a developer and want to add Filters support to your own mod, you can simply do so by adding this to your ```build.gradle``` file.
 
 ```gradle
 repositories {
@@ -44,4 +44,4 @@ dependencies {
     compile fg.deobf("curse.maven:fr-397288:FILE_ID")
 }
 ```
-Replace ```FILE_ID``` with the current/your desired version.
+Replace ```FILE_ID``` with the file id targeted towards your minecraft version. For a full list see the [official curseforge page](https://www.curseforge.com/minecraft/mc-mods/filters-reborn).
