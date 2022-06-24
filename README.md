@@ -1,4 +1,4 @@
-![Filters Reborn Banner](https://lookonthebrightsi.de/mc-mods/filters-reborn/images/filters-reborn-banner.png)
+![Filters Reborn Banner](https://mc.lookonthebrightsi.de/filters-reborn/images/filters-reborn-banner.png)
 
 ![Curseforge](http://cf.way2muchnoise.eu/title/filters-reborn.svg?badge_style=for_the_badge)
 ![Downloads](http://cf.way2muchnoise.eu/full_filters-reborn_downloads.svg?badge_style=for_the_badge)
@@ -21,10 +21,10 @@ Filters introduces filters into the Creative GUI based on tags introduced in Min
 
 ### Screenshots:
 
-![Screenshot 1](https://lookonthebrightsi.de/mc-mods/filters-reborn/textures/filters_1.png)
-![Screenshot 2](https://lookonthebrightsi.de/mc-mods/filters-reborn/textures/filters_2.png)
-![Screenshot 3](https://lookonthebrightsi.de/mc-mods/filters-reborn/textures/filters_3.png)
-![Screenshot 4](https://lookonthebrightsi.de/mc-mods/filters-reborn/textures/filters_4.png)
+![Screenshot 1](https://mc.lookonthebrightsi.de/filters-reborn/textures/filters_1.png)
+![Screenshot 2](https://mc.lookonthebrightsi.de/filters-reborn/textures/filters_2.png)
+![Screenshot 3](https://mc.lookonthebrightsi.de/filters-reborn/textures/filters_3.png)
+![Screenshot 4](https://mc.lookonthebrightsi.de/filters-reborn/textures/filters_4.png)
 
 ### Developers:
 
