@@ -1,10 +1,10 @@
 package com.mrcrayfish.filters;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +45,7 @@ public class FilterEntry
 
     public String getName()
     {
-        return I18n.format(this.translationKey);
+        return I18n.get(this.translationKey);
     }
 
     public void setEnabled(boolean enabled)

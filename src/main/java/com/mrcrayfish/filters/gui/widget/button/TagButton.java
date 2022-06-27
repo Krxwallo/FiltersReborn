@@ -1,21 +1,18 @@
 package com.mrcrayfish.filters.gui.widget.button;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mrcrayfish.filters.FilterEntry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
-
-import javax.annotation.Nonnull;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Author: MrCrayfish
@@ -30,9 +27,9 @@ public class TagButton extends Button
     public final int x;
     public final int y;
 
-    public TagButton(int x, int y, FilterEntry filter, IPressable pressable)
+    public TagButton(int x, int y, FilterEntry filter, OnPress onPress)
     {
-        super(x, y, 32 /* width */, 28, new TranslationTextComponent(""), pressable);
+        super(x, y, 32 /* width */, 28, new TranslatableComponent(""), onPress);
         this.category = filter;
         this.stack = filter.getIcon();
         this.toggled = filter.isEnabled();
@@ -46,29 +43,27 @@ public class TagButton extends Button
     }
 
     public void setActive(boolean active) {
-        this.field_230694_p_ = active;
+        this.active = active;
     }
 
     @SuppressWarnings("unused")
     public boolean getActive() {
-        return field_230694_p_;
+        return active;
     }
 
     @Override
-    public void func_230431_b_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        // equals "renderButton()"
-        // this.matrixStack = matrixStack;
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         renderButton();
-        super.func_230431_b_(matrixStack, mouseX, mouseY, partialTicks);
+        super.renderButton(poseStack, mouseX, mouseY, partialTicks);
     }
 
     public void renderButton()
     {
         Minecraft mc = Minecraft.getInstance();
-        mc.getTextureManager().bindTexture(TABS);
+        mc.getTextureManager().bindForSetup(TABS);
 
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, field_230695_q_ /* this.alpha */);
-        RenderSystem.disableLighting();
+        RenderSystem.clearColor(1.0F, 1.0F, 1.0F, alpha /* this.alpha */);
+        RenderSystem.disableTexture(); // disableLighting?
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.ordinal(), GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.ordinal(), GlStateManager.SourceFactor.ONE.ordinal(), GlStateManager.DestFactor.ZERO.ordinal());
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.ordinal(), GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.ordinal());
@@ -78,27 +73,28 @@ public class TagButton extends Button
         int textureY = this.toggled ? 32 : 0;
         this.drawRotatedTexture(this.x, this.y, textureX, textureY, width, 28);
 
-        RenderSystem.enableRescaleNormal();
-        RenderHelper.enableStandardItemLighting(); //RenderHelper.enableGUIStandardItemLighting();
+        //RenderSystem.scale???(); // enableRescaleNormal()
+        RenderHelper.enableStandardItemLighting(); //RenderHelper.enableGUIStandardItemLighting(); // RenderHelper
         ItemRenderer renderer = mc.getItemRenderer();
-        renderer.zLevel = 100.0F;
-        renderer.renderItemAndEffectIntoGUI(this.stack, x + 8, y + 6);
-        renderer.renderItemOverlays(mc.fontRenderer, this.stack, x + 8, y + 6);
-        renderer.zLevel = 100.0F;
+        renderer.blitOffset = 100.0F; // zLevel
+        renderer.renderAndDecorateItem(this.stack, x + 8, y + 6);
+        renderer.renderGuiItemDecorations(mc.font, this.stack, x + 8, y + 6);
+        renderer.blitOffset = 100.0F; // zLevel
     }
 
     private void drawRotatedTexture(int x, int y, int textureX, int textureY, int width, @SuppressWarnings("SameParameterValue") int height)
     {
         float scaleX = 0.00390625F;
         float scaleY = 0.00390625F;
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(x, y + height, 0.0).tex((float)(textureX + height) * scaleX, (float)(textureY) * scaleY).endVertex();
-        bufferbuilder.pos(x + width, y + height, 0.0).tex((float)(textureX + height) * scaleX, (float)(textureY + width) * scaleY).endVertex();
-        bufferbuilder.pos(x + width, y, 0.0).tex((float)(textureX) * scaleX, (float)(textureY + width) * scaleY).endVertex();
-        bufferbuilder.pos(x, y, 0.0).tex((float)(textureX) * scaleX, (float)(textureY) * scaleY).endVertex();
-        tessellator.draw();
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferbuilder = tesselator.getBuilder();
+        bufferbuilder.begin(7, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder.vertex(x, y + height, 0.0).uv((float)(textureX + height) * scaleX, (float)(textureY) * scaleY).endVertex(); // .pos(...).tex(...)
+        bufferbuilder.vertex(x + width, y + height, 0.0).uv((float)(textureX + height) * scaleX, (float)(textureY + width) * scaleY).endVertex();
+        bufferbuilder.vertex(x + width, y, 0.0).uv((float)(textureX) * scaleX, (float)(textureY + width) * scaleY).endVertex();
+        bufferbuilder.vertex(x, y, 0.0).uv((float)(textureX) * scaleX, (float)(textureY) * scaleY).endVertex();
+        bufferbuilder.vertex(x, y, 0.0).uv((float)(textureX) * scaleX, (float)(textureY) * scaleY).endVertex();
+        tesselator.end();
     }
 
     public void updateState()

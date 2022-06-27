@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mrcrayfish.filters.client.Client;
 import com.mrcrayfish.filters.interfaces.IFiltersRegister;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -15,10 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Author: MrCrayfish feat. justAm0dd3r
@@ -29,7 +25,7 @@ public class Filters implements IFiltersRegister
     private static final Logger LOGGER = LogManager.getLogger();
     private static Filters instance;
 
-    private final Map<ItemGroup, Set<FilterEntry>> filterMap = new HashMap<>();
+    private final Map<CreativeModeTab, Set<FilterEntry>> filterMap = new HashMap<>();
     public Events events;
 
     public Filters()
@@ -45,13 +41,13 @@ public class Filters implements IFiltersRegister
     public static Filters get() { return instance; }
 
     @Override
-    public void register(ItemGroup group, @Nonnull ResourceLocation tag, ItemStack icon)
+    public void register(CreativeModeTab group, @Nonnull ResourceLocation tag, ItemStack icon)
     {
         Set<FilterEntry> entries = this.filterMap.computeIfAbsent(group, itemGroup -> new LinkedHashSet<>());
         entries.add(new FilterEntry(tag, icon));
     }
 
-    public Set<ItemGroup>             getGroups()                 { return ImmutableSet.copyOf(this.filterMap.keySet()); }
-    public ImmutableList<FilterEntry> getFilters(ItemGroup group) { return ImmutableList.copyOf(this.filterMap.get(group)); }
-    public boolean                    hasFilters(ItemGroup group) { return this.filterMap.containsKey(group); }
+    public Set<CreativeModeTab>             getGroups()                 { return ImmutableSet.copyOf(this.filterMap.keySet()); }
+    public ImmutableList<FilterEntry> getFilters(CreativeModeTab group) { return ImmutableList.copyOf(this.filterMap.get(group)); }
+    public boolean                    hasFilters(CreativeModeTab group) { return this.filterMap.containsKey(group); }
 }

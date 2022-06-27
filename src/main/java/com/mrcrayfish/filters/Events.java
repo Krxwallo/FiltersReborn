@@ -1,23 +1,13 @@
 package com.mrcrayfish.filters;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.datafixers.types.templates.List;
 import com.mrcrayfish.filters.gui.widget.button.IconButton;
 import com.mrcrayfish.filters.gui.widget.button.TagButton;
 import com.mrcrayfish.filters.helper.ItemGroups;
 import com.mrcrayfish.filters.web.LinkManager;
 import mezz.jei.events.BookmarkOverlayToggleEvent;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.CreativeScreen;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -29,8 +19,9 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Author: MrCrayfish & justAm0dd3r
@@ -45,7 +36,7 @@ public class Events
     - func_238652_a_(stack, ITextProperties properties, int, int) equals renderToolTip()
      */
     private static final ResourceLocation ICONS = new ResourceLocation(Reference.MOD_ID, "textures/gui/icons.png");
-    private static final Map<ItemGroup, Integer> scrollMap = new HashMap<>();
+    private static final Map<CreativeModeTab, Integer> scrollMap = new HashMap<>();
 
     private boolean updatedFilters;
     private final List<TagButton> buttons = new ArrayList<>();

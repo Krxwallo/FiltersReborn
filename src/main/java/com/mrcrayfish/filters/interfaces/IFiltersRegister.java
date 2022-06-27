@@ -1,11 +1,12 @@
 package com.mrcrayfish.filters.interfaces;
 
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
 public interface IFiltersRegister {
-    void register(ItemGroup group, @Nonnull ResourceLocation tag, ItemStack icon);
+    void register(CreativeModeTab group, @Nonnull ResourceLocation tag, ItemStack icon);
 }
