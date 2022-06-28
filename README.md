@@ -11,7 +11,7 @@
 
 # Filters Reborn (desc. from original mod)
 
-Filters introduces filters into the Creative GUI based on tags introduced in Minecraft 1.13. Although creative groups exist, some contain hundreds of items which can make it difficult to locate a specific item. Filters makes it easy to find an item by adding new filter tabs to the left side of the creative screen that allow you to limit the items shown based on the category they fall under. It also uses the new Minecraft tags which makes it easily for players to change them around easily using a resource pack. Mod developers get access to register custom filters for their own mod.. Originally this filter system was an exclusive to MrCrayfish's Furniture Mod however I decided to make it not only a seperate mod because of it's useful functionality.
+Filters introduces filters into the Creative GUI based on tags introduced in Minecraft 1.13. Although creative [tabs] exist, some contain hundreds of items which can make it difficult to locate a specific item. Filters makes it easy to find an item by adding new filter tabs to the left side of the creative screen that allow you to limit the items shown based on the category they fall under. It also uses the new Minecraft tags which makes it easily for players to change them around easily using a resource pack. Mod developers get access to register custom filters for their own mod. Originally this filter system was an exclusive to MrCrayfish's Furniture Mod however [MrCrayfish] decided to make it not only a seperate mod because of it's useful functionality.
 
 ### Features:
 

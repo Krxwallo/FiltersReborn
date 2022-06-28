@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.mrcrayfish.filters.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "minVersion": "0.8",
+  "refmap": "filters_reborn.refmap.json",
+  "client": [
+    "client.CreativeInventoryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

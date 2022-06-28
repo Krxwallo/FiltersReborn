@@ -45,9 +45,9 @@ public class Filters implements IFiltersRegister
     public static Filters get() { return instance; }
 
     @Override
-    public void register(CreativeModeTab group, @Nonnull ResourceLocation tag, ItemStack icon)
+    public void register(CreativeModeTab tab, @Nonnull ResourceLocation tag, ItemStack icon)
     {
-        Set<FilterEntry> entries = this.filterMap.computeIfAbsent(group, itemGroup -> new LinkedHashSet<>());
+        Set<FilterEntry> entries = this.filterMap.computeIfAbsent(tab, itemGroup -> new LinkedHashSet<>());
         entries.add(new FilterEntry(tag, icon));
     }
 

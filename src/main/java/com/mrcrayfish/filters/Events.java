@@ -6,7 +6,6 @@ import com.mrcrayfish.filters.gui.widget.button.TagButton;
 import com.mrcrayfish.filters.helper.TabHelper;
 import com.mrcrayfish.filters.web.LinkManager;
 import mezz.jei.events.BookmarkOverlayToggleEvent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -27,10 +26,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Author: MrCrayfish & justAm0dd3r
@@ -159,9 +156,9 @@ public class Events {
         if (event.getGuiContainer() instanceof CreativeModeInventoryScreen screen)
         {
 
-            CreativeModeTab group = TabHelper.getTab(screen.getSelectedTab());
+            CreativeModeTab tab = TabHelper.getTab(screen.getSelectedTab());
 
-            if (Filters.get().hasFilters(group))
+            if (Filters.get().hasFilters(tab))
             {
                 // Filters are available for this creative tab. Now we can render the buttons and the text.
 
@@ -177,7 +174,7 @@ public class Events {
                     }
                 }
 
-                GL11.glPushMatrix();
+                /*GL11.glPushMatrix();
                 // Change the text size
                 GL11.glScalef(1, 1, 1);
                 // Render the text
@@ -185,7 +182,7 @@ public class Events {
                 Minecraft.getInstance().font.draw(event.getMatrixStack(),
                         new TranslatableComponent("gui.filters.message.main", Reference.NAME, Reference.VERSION),
                         x, 3, ChatFormatting.WHITE.getColor());
-                GL11.glPopMatrix();
+                GL11.glPopMatrix();*/
             }
         }
     }
@@ -324,24 +321,25 @@ public class Events {
             entries.forEach(FilterEntry::clear);
 
             Set<Item> removed = new HashSet<>();
-            List<Item> items = ForgeRegistries.ITEMS.getValues().stream()
-                .filter(item -> item.getCreativeTabs().stream().findFirst().orElse(null) == tab || item == Items.ENCHANTED_BOOK)
-                .collect(Collectors.toList());
-            items.forEach(item -> {
-                for (ResourceLocation location : item.getTags()) {
-                    for (FilterEntry filter : entries) {
-                        if (location.equals(filter.getTag())) {
-                            filter.add(item);
-                            removed.add(item);
+            ForgeRegistries.ITEMS.forEach(item -> {
+                var tabs = item.getCreativeTabs();
+                if (tabs.contains(tab) || item == Items.ENCHANTED_BOOK) {
+                    for (var id : item.getTags()) {
+                        for (var filter : entries) {
+                            if (id.equals(filter.getTag())) {
+                                filter.add(item);
+                                removed.add(item);
+                            }
                         }
                     }
                 }
             });
-            items.removeAll(removed);
 
-            if (tab.getEnchantmentCategories().length == 0) {
-                items.remove(Items.ENCHANTED_BOOK);
-            }
+            List<Item> items = new ArrayList<>(ForgeRegistries.ITEMS.getValues());
+            items.removeAll(removed);
+            //Collection<Item> items = ForgeRegistries.ITEMS.getValues().stream().filter(i -> !removed.contains(i)).toList();
+
+            if (tab.getEnchantmentCategories().length == 0) items.remove(Items.ENCHANTED_BOOK);
 
             if (!items.isEmpty()) {
                 FilterEntry entry = new FilterEntry(new ResourceLocation("miscellaneous"), new ItemStack(Blocks.BARRIER));

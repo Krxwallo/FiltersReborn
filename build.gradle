@@ -1,14 +1,16 @@
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://repo.spongepowered.org/maven' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
@@ -75,6 +77,10 @@ minecraft {
     }
 }
 
+mixin {
+    add sourceSets.main, "filters_reborn.refmap.json"
+}
+
 repositories {
     maven {
         url "https://cursemaven.com"
@@ -86,6 +92,7 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.17.1-37.1.1'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation fg.deobf("curse.maven:jei-238222:3596034")
 }
 
@@ -96,6 +103,7 @@ jar {
             "Specification-Title": "filters_reborn",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
+            "MixinConfigs": "filters_reborn.mixins.json"
         ])
     }
 }
