@@ -3,16 +3,16 @@ function initializeCoreMod() {
         'set_creative_tab': {
             'target': {
                 'type': 'CLASS',
-                'name': 'net.minecraft.client.gui.screen.inventory.CreativeScreen'
+                'name': 'net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen'
             },
             'transformer': function(classNode) {
-                log("Patching CreativeScreen...");
+                log("Patching CreativeModeInventoryScreen...");
 
                 patch({
                     obfName: "func_147050_b",
                     name: "setCurrentCreativeTab",
                     desc: "(Lnet/minecraft/item/ItemGroup;)V",
-                    patch: patch_CreativeScreen_setCurrentCreativeTab
+                    patch: patch_CreativeModeInventoryScreen_setCurrentCreativeTab
                 }, classNode);
 
                 return classNode;
@@ -48,9 +48,9 @@ function initializeCoreMod() {
 
 function findMethod(methods, entry) {
     var length = methods.length;
-    for(var i = 0; i < length; i++) {
+    for (var i = 0; i < length; i++) {
         var method = methods[i];
-        if((method.name.equals(entry.obfName) || method.name.equals(entry.name)) && method.desc.equals(entry.desc)) {
+        if ((method.name.equals(entry.obfName) || method.name.equals(entry.name)) && method.desc.equals(entry.desc)) {
             return method;
         }
     }
@@ -60,9 +60,9 @@ function findMethod(methods, entry) {
 function patch(entry, classNode) {
     var method = findMethod(classNode.methods, entry);
     var name = classNode.name.replace("/", ".") + "#" + entry.name + entry.desc;
-    if(method !== null) {
+    if (method !== null) {
         log("Starting to patch: " + name);
-        if(entry.patch(method)) {
+        if (entry.patch(method)) {
             log("Successfully patched: " + name);
         } else {
             log("Failed to patch: " + name);
@@ -88,8 +88,8 @@ function findFirstMethodInsnNode(method, instruction, code) {
     var length = instructions.length;
     for (var i = 0; i < length; i++) {
         var node = instructions[i];
-        if(node.getOpcode() == code) {
-            if(instruction.matches(node.name) && instruction.desc.equals(node.desc)) {
+        if (node.getOpcode() == code) {
+            if (instruction.matches(node.name) && instruction.desc.equals(node.desc)) {
                 return node;
             }
         }
@@ -103,8 +103,8 @@ function findFirstFieldInsnNode(method, instruction) {
      var length = instructions.length;
      for (var i = 0; i < length; i++) {
          var node = instructions[i];
-         if(node.getOpcode() == Opcodes.GETFIELD) {
-             if(instruction.matches(node.name) && instruction.desc.equals(node.desc)) {
+         if (node.getOpcode() == Opcodes.GETFIELD) {
+             if (instruction.matches(node.name) && instruction.desc.equals(node.desc)) {
                  return node;
              }
          }
@@ -118,14 +118,14 @@ function findFirstIntInsnNode(method, instruction, code) {
      var length = instructions.length;
      for (var i = 0; i < length; i++) {
          var node = instructions[i];
-         if(node.getOpcode() == code && node.operand == instruction.operand) {
+         if (node.getOpcode() == code && node.operand == instruction.operand) {
              return node;
          }
      }
      return null;
 }
 
-function patch_CreativeScreen_setCurrentCreativeTab(method) {
+function patch_CreativeModeInventoryScreen_setCurrentCreativeTab(method) {
     var findInstruction = {
         obfName: "func_148329_a",
         name: "scrollTo",
@@ -135,9 +135,9 @@ function patch_CreativeScreen_setCurrentCreativeTab(method) {
         }
     };
     var node = findFirstMethodInsnNode(method, findInstruction, Opcodes.INVOKEVIRTUAL);
-    if(node !== null)
+    if (node !== null)
     {
-        method.instructions.insert(node, new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "com/mrcrayfish/filters/Events", "onCreativeTabChange", "(Lnet/minecraft/client/gui/screen/inventory/CreativeScreen;Lnet/minecraft/item/ItemGroup;)V", false));
+        method.instructions.insert(node, new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "com/mrcrayfish/filters/Events", "onCreativeTabChange", "(Lnet/minecraft/client/gui/screen/inventory/CreativeModeInventoryScreen;Lnet/minecraft/item/ItemGroup;)V", false));
         method.instructions.insert(node, new VarInsnNode(Opcodes.ALOAD, 1));
         method.instructions.insert(node, new VarInsnNode(Opcodes.ALOAD, 0));
         method.instructions.insert(node, new FieldInsnNode(Opcodes.GETFIELD, "com/mrcrayfish/filters/Filters", "events", "Lcom/mrcrayfish/filters/Events;"));
@@ -157,7 +157,7 @@ function patch_DisplayEffectsScreen_drawActivePotionEffects(method) {
         }
     };
     var node = findFirstFieldInsnNode(method, findInstruction);
-    if(node !== null)
+    if (node !== null)
     {
         var nextNode = node.getNext();
         method.instructions.remove(nextNode);
@@ -173,7 +173,7 @@ function patch_DisplayEffectsScreen_updateActivePotionEffects(method) {
         operand: 160
     };
     var node = findFirstIntInsnNode(method, instruction, Opcodes.SIPUSH);
-    if(node !== null)
+    if (node !== null)
     {
         method.instructions.insert(node, new MethodInsnNode(Opcodes.INVOKESTATIC, "com/mrcrayfish/filters/Hooks", "getEffectsGuiOffset", "(Lnet/minecraft/client/gui/DisplayEffectsScreen;)I", false));
         method.instructions.insert(node, new VarInsnNode(Opcodes.ALOAD, 0));

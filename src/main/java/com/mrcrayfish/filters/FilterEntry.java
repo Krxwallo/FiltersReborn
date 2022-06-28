@@ -1,6 +1,8 @@
 package com.mrcrayfish.filters;
 
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -8,10 +10,8 @@ import net.minecraft.world.level.block.Block;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Author: MrCrayfish
@@ -43,9 +43,9 @@ public class FilterEntry
         return this.icon;
     }
 
-    public String getName()
+    public Component getName()
     {
-        return I18n.get(this.translationKey);
+        return new TextComponent(I18n.get(this.translationKey));
     }
 
     public void setEnabled(boolean enabled)
@@ -81,11 +81,11 @@ public class FilterEntry
     @Override
     public boolean equals(Object o)
     {
-        if(this == o)
+        if (this == o)
         {
             return true;
         }
-        if(o == null || getClass() != o.getClass())
+        if (o == null || getClass() != o.getClass())
         {
             return false;
         }

@@ -9,30 +9,30 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class ItemGroups {
-    public static boolean getHasFilters(GuiScreenEvent event) {
-        return Filters.get().hasFilters(getGroup(event));
+public class TabHelper {
+    public static boolean hasFilters(GuiScreenEvent event) {
+        return Filters.get().hasFilters(getTab(event));
     }
 
     @Nonnull
-    public static CreativeModeTab getGroup(GuiScreenEvent event) {
+    public static CreativeModeTab getTab(GuiScreenEvent event) {
         return requireItemGroup(((CreativeModeInventoryScreen) event.getGui()).getSelectedTab());
     }
 
     @Nullable
-    public static CreativeModeTab getGroup(int index)
+    public static CreativeModeTab getTab(int index)
     {
-        if(index < 0 || index >= CreativeModeTab.TABS.length)
+        if (index < 0 || index >= CreativeModeTab.TABS.length)
             return null;
         return CreativeModeTab.TABS[index];
     }
 
     @Nonnull
     public static CreativeModeTab requireItemGroup(int index) {
-        return Objects.requireNonNull(getGroup(index));
+        return Objects.requireNonNull(getTab(index));
     }
 
-    public static boolean getHasFilters(CreativeModeTab group) {
+    public static boolean hasFilters(CreativeModeTab group) {
         return Filters.get().hasFilters(group);
     }
 }

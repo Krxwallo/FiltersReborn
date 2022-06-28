@@ -2,10 +2,7 @@ package com.mrcrayfish.filters.gui.widget.button;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.*;
 import com.mrcrayfish.filters.FilterEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -13,6 +10,8 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+
+import javax.annotation.Nonnull;
 
 /**
  * Author: MrCrayfish
@@ -52,7 +51,7 @@ public class TagButton extends Button
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         renderButton();
         super.renderButton(poseStack, mouseX, mouseY, partialTicks);
     }
@@ -74,7 +73,8 @@ public class TagButton extends Button
         this.drawRotatedTexture(this.x, this.y, textureX, textureY, width, 28);
 
         //RenderSystem.scale???(); // enableRescaleNormal()
-        RenderHelper.enableStandardItemLighting(); //RenderHelper.enableGUIStandardItemLighting(); // RenderHelper
+
+        //RenderHelper.enableStandardItemLighting(); //RenderHelper.enableGUIStandardItemLighting(); // RenderHelper
         ItemRenderer renderer = mc.getItemRenderer();
         renderer.blitOffset = 100.0F; // zLevel
         renderer.renderAndDecorateItem(this.stack, x + 8, y + 6);
@@ -88,7 +88,7 @@ public class TagButton extends Button
         float scaleY = 0.00390625F;
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
-        bufferbuilder.begin(7, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder.begin(VertexFormat.Mode.QUADS/*7*/, DefaultVertexFormat.POSITION_TEX);
         bufferbuilder.vertex(x, y + height, 0.0).uv((float)(textureX + height) * scaleX, (float)(textureY) * scaleY).endVertex(); // .pos(...).tex(...)
         bufferbuilder.vertex(x + width, y + height, 0.0).uv((float)(textureX + height) * scaleX, (float)(textureY + width) * scaleY).endVertex();
         bufferbuilder.vertex(x + width, y, 0.0).uv((float)(textureX) * scaleX, (float)(textureY + width) * scaleY).endVertex();

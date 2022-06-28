@@ -8,11 +8,11 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.screen.inventory.CreativeScreen;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -35,32 +35,24 @@ public class FiltersJeiPlugin implements IModPlugin
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration)
     {
-        registration.addGuiContainerHandler(CreativeScreen.class, new IGuiContainerHandler<CreativeScreen>()
-        {
+        registration.addGuiContainerHandler(CreativeModeInventoryScreen.class, new IGuiContainerHandler<>() {
             @Nonnull
             @Override
-            public List<Rectangle2d> getGuiExtraAreas(@Nonnull CreativeScreen screen)
-            {
-                if (Filters.get().hasFilters(ItemGroup.GROUPS[screen.getSelectedTabIndex()]))
-                {
-                    List<Rectangle2d> areas = new ArrayList<>();
+            public List<Rect2i> getGuiExtraAreas(@Nonnull CreativeModeInventoryScreen screen) {
+                if (Filters.get().hasFilters(CreativeModeTab.TABS[screen.getSelectedTab()])) {
+                    List<Rect2i> areas = new ArrayList<>();
 
                     /* Tabs */
-                    areas.add(new Rectangle2d(screen.getGuiLeft() - 28, screen.getGuiTop() + 10, 56, 230));
+                    areas.add(new Rect2i(screen.getGuiLeft() - 28, screen.getGuiTop() + 10, 56, 230));
 
                     /* Buttons */
-                    for (IGuiEventListener child : screen.func_231039_at__()) // screen.children()
-                    {
-                        if (child instanceof IconButton)
-                        {
-                            IconButton button = (IconButton) child;
-                            areas.add(new Rectangle2d(button.x, button.y, button.func_230998_h_()/*.getWidth()*/, button.getHeight()));
+                    for (GuiEventListener child : screen.children()) {
+                        if (child instanceof IconButton button) {
+                            areas.add(new Rect2i(button.x, button.y, button.getWidth(), button.getHeight()));
                         }
 
-                        if (child instanceof TagButton)
-                        {
-                            TagButton button = (TagButton) child;
-                            areas.add(new Rectangle2d(button.x, button.y, button.func_230998_h_()/*.getWidth()*/, button.getHeight()));
+                        if (child instanceof TagButton button) {
+                            areas.add(new Rect2i(button.x, button.y, button.getWidth(), button.getHeight()));
                         }
                     }
 

@@ -1,6 +1,7 @@
 modLoader="javafml"
 loaderVersion="[37,)"
 issueTrackerURL="https://github.com/Krxwallo/FiltersReborn/issues"
+license="GPLv3+"
 
 [[mods]]
 modId="filters"

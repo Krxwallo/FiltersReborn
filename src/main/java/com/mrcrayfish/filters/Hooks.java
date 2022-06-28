@@ -1,9 +1,7 @@
 package com.mrcrayfish.filters;
 
-import net.minecraft.client.gui.DisplayEffectsScreen;
-import net.minecraft.client.gui.screen.inventory.CreativeScreen;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 
 /**
  * Author: MrCrayfish feat. justAm0dd3r
@@ -13,10 +11,9 @@ public class Hooks
 {
     private static int animation = 48;
 
-    public static int getPotionEffectOffset(@SuppressWarnings("rawtypes") DisplayEffectsScreen screen)
+    public static int getPotionEffectOffset(@SuppressWarnings("rawtypes") EffectRenderingInventoryScreen screen)
     {
-        if(screen instanceof CreativeScreen && !Filters.get().events.noFilters)
-        {
+        if (screen instanceof CreativeModeInventoryScreen && !Filters.get().events.noFilters) {
             animation = 48;
             return 172;
         }
@@ -27,10 +24,9 @@ public class Hooks
         }
     }
 
-    public static int getEffectsGuiOffset(@SuppressWarnings("rawtypes") DisplayEffectsScreen screen)
+    public static int getEffectsGuiOffset(@SuppressWarnings("rawtypes") EffectRenderingInventoryScreen screen)
     {
-        if(screen instanceof CreativeScreen)
-        {
+        if (screen instanceof CreativeModeInventoryScreen) {
             return 182;
         }
         return 160;
