@@ -117,7 +117,7 @@ public class Events {
         }
     }
 
-    @SuppressWarnings("unused") // Gets called by coremod
+    @SuppressWarnings("unused") // Gets called by coremod // TODO call by mixin xd
     public void onCreativeTabChange(CreativeModeInventoryScreen screen, CreativeModeTab tab) {
         if (TabHelper.hasFilters(tab))
         {
@@ -162,7 +162,7 @@ public class Events {
             {
                 // Filters are available for this creative tab. Now we can render the buttons and the text.
 
-                // Render Buttons
+                // Render Buttons FIXME when on page 2 one button gets rendered correctly xd
                 this.buttons.forEach(TagButton::renderButton);
 
                 // Get the right text x -> check if the jei bookmark overlay is enabled

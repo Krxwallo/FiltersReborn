@@ -79,6 +79,7 @@ minecraft {
 
 mixin {
     add sourceSets.main, "filters_reborn.refmap.json"
+    config 'filters_reborn.mixins.json'
 }
 
 repositories {
@@ -94,6 +95,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.17.1-37.1.1'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation fg.deobf("curse.maven:jei-238222:3596034")
+    implementation fg.deobf("curse.maven:dye_extension-388395:3849148") // Test mod for multiple pages
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

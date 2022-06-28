@@ -56,6 +56,10 @@ public class TagButton extends Button
         super.renderButton(poseStack, mouseX, mouseY, partialTicks);
     }
 
+    /**
+     * @see net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen#renderTabButton
+     */
+    @SuppressWarnings("JavadocReference")
     public void renderButton()
     {
         Minecraft mc = Minecraft.getInstance();
@@ -75,11 +79,12 @@ public class TagButton extends Button
         //RenderSystem.scale???(); // enableRescaleNormal()
 
         //RenderHelper.enableStandardItemLighting(); //RenderHelper.enableGUIStandardItemLighting(); // RenderHelper
+        RenderSystem.enableBlend();
         ItemRenderer renderer = mc.getItemRenderer();
         renderer.blitOffset = 100.0F; // zLevel
         renderer.renderAndDecorateItem(this.stack, x + 8, y + 6);
         renderer.renderGuiItemDecorations(mc.font, this.stack, x + 8, y + 6);
-        renderer.blitOffset = 100.0F; // zLevel
+        renderer.blitOffset = 0.0F; // zLevel
     }
 
     private void drawRotatedTexture(int x, int y, int textureX, int textureY, int width, @SuppressWarnings("SameParameterValue") int height)
