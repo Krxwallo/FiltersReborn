@@ -52,6 +52,6 @@ public class Filters implements IFiltersRegister
     }
 
     public Set<CreativeModeTab> getTabs()                 { return ImmutableSet.copyOf(this.filterMap.keySet()); }
-    public ImmutableList<FilterEntry> getFilters(CreativeModeTab group) { return ImmutableList.copyOf(this.filterMap.get(group)); }
-    public boolean                    hasFilters(CreativeModeTab group) { return this.filterMap.containsKey(group); }
+    public ImmutableList<FilterEntry> getFilters(CreativeModeTab tab) { return ImmutableList.copyOf(this.filterMap.get(tab)); }
+    public boolean                    hasFilters(CreativeModeTab tab) { return this.filterMap.containsKey(tab); }
 }

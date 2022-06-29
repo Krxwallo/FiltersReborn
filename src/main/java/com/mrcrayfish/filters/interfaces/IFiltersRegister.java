@@ -8,5 +8,5 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 
 public interface IFiltersRegister {
-    void register(CreativeModeTab group, @Nonnull ResourceLocation tag, ItemStack icon);
+    void register(CreativeModeTab tab, @Nonnull ResourceLocation tag, ItemStack icon);
 }

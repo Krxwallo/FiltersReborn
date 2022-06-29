@@ -32,7 +32,7 @@ public class TabHelper {
         return Objects.requireNonNull(getTab(index));
     }
 
-    public static boolean hasFilters(CreativeModeTab group) {
-        return Filters.get().hasFilters(group);
+    public static boolean hasFilters(CreativeModeTab tab) {
+        return Filters.get().hasFilters(tab);
     }
 }

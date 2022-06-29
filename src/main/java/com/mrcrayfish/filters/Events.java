@@ -47,7 +47,7 @@ public class Events {
     private final List<TagButton> buttons = new ArrayList<>();
     private final Map<CreativeModeTab, FilterEntry> miscFilterMap = new HashMap<>();
     private IconButton btnScrollUp, btnScrollDown, btnEnableAll, btnDisableAll;
-    public boolean noFilters;
+    public boolean filtersEnabled;
     private boolean bookMarkOverlayEnabled = true; // Jei Bookmark Overlay
 
     @SubscribeEvent
@@ -95,7 +95,7 @@ public class Events {
 
         if (event.getGui() instanceof CreativeModeInventoryScreen)
         {
-            if (!noFilters && isMouseOverText(((int) event.getMouseX()), ((int) event.getMouseY())))
+            if (filtersEnabled && isMouseOverText(((int) event.getMouseX()), ((int) event.getMouseY())))
                 LinkManager.openCurseforgeLink();
 
             for (TagButton button : this.buttons)
@@ -121,12 +121,10 @@ public class Events {
     public void onCreativeTabChange(CreativeModeInventoryScreen screen, CreativeModeTab tab) {
         if (TabHelper.hasFilters(tab))
         {
-            noFilters = false;
+            filtersEnabled = true;
             this.updateItems(screen);
         }
-        else {
-            noFilters = true;
-        }
+        else filtersEnabled = false;
         this.updateTagButtons(screen);
     }
 
@@ -273,7 +271,7 @@ public class Events {
         var tab = TabHelper.getTab(screen.getSelectedTab());
         if (Filters.get().hasFilters(tab)) {
             List<FilterEntry> entries = getFilters(tab);
-            int scroll = scrollMap.computeIfAbsent(tab, group1 -> 0);
+            int scroll = scrollMap.computeIfAbsent(tab, tab1 -> 0);
             for (int i = scroll; i < scroll + 4 && i < entries.size(); i++) {
                 TagButton button = new TagButton(screen.getGuiLeft() - 28, screen.getGuiTop() + 29 * (i - scroll) + 10, entries.get(i), button1 -> this.updateItems(screen));
                 this.buttons.add(button);
@@ -295,18 +293,18 @@ public class Events {
 
         CreativeModeInventoryScreen.ItemPickerMenu menu = screen.getMenu();
         Set<Item> filteredItems = new LinkedHashSet<>();
-        CreativeModeTab group = TabHelper.getTab(screen.getSelectedTab());
-        if (group != null) {
-            if (Filters.get().hasFilters(group)) {
-                List<FilterEntry> entries = Filters.get().getFilters(group);
+        CreativeModeTab tab = TabHelper.getTab(screen.getSelectedTab());
+        if (tab != null) {
+            if (Filters.get().hasFilters(tab)) {
+                List<FilterEntry> entries = Filters.get().getFilters(tab);
                 if (entries != null) {
-                    for (FilterEntry filter : this.getFilters(group)) {
+                    for (FilterEntry filter : this.getFilters(tab)) {
                         if (filter.isEnabled()) {
                             filteredItems.addAll(filter.getItems());
                         }
                     }
                     menu.items.clear();
-                    filteredItems.forEach(item -> item.fillItemCategory(group, menu.items));
+                    filteredItems.forEach(item -> item.fillItemCategory(tab, menu.items));
                     menu.items.sort(Comparator.comparingInt(o -> Item.getId(o.getItem())));
                     menu.scrollTo(0);
                 }
@@ -383,10 +381,10 @@ public class Events {
     private void scrollUp() {
         Screen screen = Minecraft.getInstance().screen;
         if (screen instanceof CreativeModeInventoryScreen creativeScreen) {
-            CreativeModeTab group = TabHelper.getTab(creativeScreen.getSelectedTab());
-            int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
+            CreativeModeTab tab = TabHelper.getTab(creativeScreen.getSelectedTab());
+            int scroll = scrollMap.computeIfAbsent(tab, tab1 -> 0);
             if (scroll > 0) {
-                scrollMap.put(group, scroll - 1);
+                scrollMap.put(tab, scroll - 1);
                 this.updateTagButtons(creativeScreen);
             }
         }
@@ -395,16 +393,13 @@ public class Events {
     private void scrollDown() {
         Screen screen = Minecraft.getInstance().screen;
         if (screen instanceof CreativeModeInventoryScreen creativeScreen) {
-            CreativeModeTab group = TabHelper.getTab(creativeScreen.getSelectedTab());
-            List<FilterEntry> entries = this.getFilters(group);
-            //if (entries != null)
-            //{
-            int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
+            CreativeModeTab tab = TabHelper.getTab(creativeScreen.getSelectedTab());
+            List<FilterEntry> entries = this.getFilters(tab);
+            int scroll = scrollMap.computeIfAbsent(tab, tab1 -> 0);
             if (scroll <= entries.size() - 4 - 1) {
-                scrollMap.put(group, scroll + 1);
+                scrollMap.put(tab, scroll + 1);
                 this.updateTagButtons(creativeScreen);
             }
-            //}
         }
     }
 
@@ -413,14 +408,11 @@ public class Events {
 
         Screen screen = Minecraft.getInstance().screen;
         if (screen instanceof CreativeModeInventoryScreen creativeScreen) {
-            CreativeModeTab group = TabHelper.getTab(creativeScreen.getSelectedTab());
-            List<FilterEntry> entries = this.getFilters(group);
-            //if (entries != null)
-            //{
+            CreativeModeTab tab = TabHelper.getTab(creativeScreen.getSelectedTab());
+            List<FilterEntry> entries = this.getFilters(tab);
             entries.forEach(entry -> entry.setEnabled(true));
             this.buttons.forEach(TagButton::updateState);
             this.updateItems(creativeScreen);
-            //}
         }
     }
 
@@ -431,12 +423,9 @@ public class Events {
         if (screen instanceof CreativeModeInventoryScreen creativeScreen) {
             CreativeModeTab tab = TabHelper.getTab(creativeScreen.getSelectedTab());
             List<FilterEntry> entries = this.getFilters(tab);
-            //if (entries != null)
-            //{
             entries.forEach(filters -> filters.setEnabled(false));
             this.buttons.forEach(TagButton::updateState);
             this.updateItems(creativeScreen);
-            //}
         }
     }
 

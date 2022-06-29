@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -77,11 +77,6 @@ minecraft {
     }
 }
 
-mixin {
-    add sourceSets.main, "filters_reborn.refmap.json"
-    config 'filters_reborn.mixins.json'
-}
-
 repositories {
     maven {
         url "https://cursemaven.com"
@@ -93,9 +88,16 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.17.1-37.1.1'
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
     implementation fg.deobf("curse.maven:jei-238222:3596034")
     implementation fg.deobf("curse.maven:dye_extension-388395:3849148") // Test mod for multiple pages
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+mixin {
+    add sourceSets.main, "filters_reborn.refmap.json"
+    config 'filters_reborn.mixins.json'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

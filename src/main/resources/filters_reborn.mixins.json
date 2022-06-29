@@ -5,9 +5,7 @@
   "minVersion": "0.8",
   "refmap": "filters_reborn.refmap.json",
   "client": [
-    "client.CreativeInventoryMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "client.CreativeInventoryMixin",
+    "client.EffectRenderingMixin"
+  ]
 }
